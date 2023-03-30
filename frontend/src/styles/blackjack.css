@@ -1,0 +1,61 @@
+.black__main {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+.black__table {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   width: 100%;
+   flex-direction: column;
+}
+
+.black__table-main {
+   margin-bottom: 15px;
+}
+.table__card {
+   width: max(8vw, 100px);
+}
+.table__card img {
+   width: 100%;
+}
+
+.black__playerslist {
+   display: flex;
+   justify-content: space-around;
+   align-items: center;
+   width: 100%;
+   margin-top: -2vw;
+}
+
+.black__playerslist-gamer {
+   position: relative;
+}
+
+.black__playerslist-info {
+   display: flex;
+   align-items: center;
+   justify-content: space-around;
+   width: 100%;
+   margin-bottom: 10px;
+}
+
+.black__playerslist-wrapper {
+   display: flex;
+   gap: 5px;
+}
+
+.black__table-wrapper {
+   display: flex;
+   gap: 10px;
+   justify-content: center;
+   align-items: center;
+}
+
+.black__table-info {
+   width: 100%;
+   text-align: center;
+   padding-top: 10px;
+}

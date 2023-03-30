@@ -1,0 +1,16 @@
+.header {
+   margin-bottom: -5em;
+}
+.header__wrapper {
+   width: 100%;
+   display: flex;
+   justify-content: center;
+   padding: 10px 0;
+   margin: 20px auto 100px;
+}
+.header__link {
+   margin: 0 auto;
+   font-size: 20px;
+   line-height: 100%;
+   cursor: pointer;
+}

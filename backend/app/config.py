@@ -43,26 +43,26 @@ class Settings(BaseSettings):
     DATABASE_URL: PostgresDsn
         строка подключения (ссылка) к базе данных
     """
-    APP_NAME: str
-    APP_VERSION: str
-    APP_DESCRIPTION: str
+    APP_NAME: str = "CYBERSQUAD Games"
+    APP_VERSION: str = "2.0.0"
+    APP_DESCRIPTION: str = "API серверной части локальной игровой платформы от команды CYBERSQUAD."
 
-    ADMIN_NAME: str
-    ADMIN_EMAIL: EmailStr
+    ADMIN_NAME: str = "Ванюков Алексей Игоревич"
+    ADMIN_EMAIL: EmailStr = "vanyukov.alex@gmail.com"
 
-    DOMAIN: str | IPvAnyAddress
+    DOMAIN: str | IPvAnyAddress = "127.0.0.1"
 
-    BACKEND_PORT: int
+    BACKEND_PORT: int = 8080
 
-    DATABASE_USER: str
-    DATABASE_PASSWORD: str
-    DATABASE_PORT: int
-    DATABASE_NAME: str
+    DATABASE_USER: str = "root"
+    DATABASE_PASSWORD: str = "toor"
+    DATABASE_PORT: int = 5432
+    DATABASE_NAME: str = "cybersquad_games"
 
-    DATABASE_URL: PostgresDsn
+    DATABASE_URL: PostgresDsn = f"postgresql+asyncpg://{DATABASE_USER}:{DATABASE_PASSWORD}@{DOMAIN}:" \
+                                f"{DATABASE_PORT}/{DATABASE_NAME}"
 
     class Config:
-        env_file = ".env"
         case_sensitive = True
 
 

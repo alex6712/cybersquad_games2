@@ -6,7 +6,7 @@ type Props = {
 
 function Myinput({ inp_type }: Props) {
    return (
-      <input type={inp_type} className="auth__form-input" />
+      <input type={inp_type} className="myInput" />
    )
 }
 

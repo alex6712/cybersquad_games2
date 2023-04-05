@@ -1,11 +1,11 @@
 import React from 'react'
-import '../../styles/header.css'
+import '../styles/header.css'
 
 type Props = {}
 
 function Header(props: Props) {
 
-   const isAuth = false
+   const isAuth = true
    const nickname = 'player'
 
    function exit() {
@@ -32,7 +32,7 @@ function Header(props: Props) {
             {isAuth
                ? <div className="header__wrapper">
                   <a className="header__link" href='/'>Главная</a>
-                  <div className="header__link" >Приятной игры, {nickname}</div>
+                  <div className="header__link" >Удачи, {nickname}</div>
                   <a className="header__link" href='/' onClick={exit} >Выйти</a>
                </div>
                : <div className="header__wrapper">

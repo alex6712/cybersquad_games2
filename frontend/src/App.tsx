@@ -1,6 +1,6 @@
 import React from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import Header from './components/UI/Header';
+import Header from './components/Header';
 import Auth from './pages/Auth';
 import Blackjack from './pages/Blackjack';
 import Main from './pages/Main';
@@ -14,31 +14,37 @@ const App: React.FC = () => {
       path: "/",
       element: <Main />,
       children: [],
+      errorElement: <Main />
     },
     {
       path: "/auth",
       element: <Auth />,
       children: [],
+      errorElement: <Main />
     },
     {
       path: "/registration",
       element: <Registration />,
       children: [],
+      errorElement: <Main />
     },
     {
       path: "/poker",
       element: <Poker />,
       children: [],
+      errorElement: <Main />
     },
     {
       path: "/roulett",
       element: <Roulett />,
       children: [],
+      errorElement: <Main />
     },
     {
       path: "/blackjack",
       element: <Blackjack />,
       children: [],
+      errorElement: <Main />
     },
   ]);
   return (

@@ -4,6 +4,10 @@
    align-items: center;
 }
 
+.back-gamestate {
+   text-align: center;
+}
+
 .black__table {
    display: flex;
    justify-content: center;
@@ -16,7 +20,7 @@
    margin-bottom: 15px;
 }
 .table__card {
-   width: max(8vw, 100px);
+   width: max(8vw, 130px);
 }
 .table__card img {
    width: 100%;
@@ -27,22 +31,27 @@
    justify-content: space-around;
    align-items: center;
    width: 100%;
-   margin-top: -2vw;
+   margin-top: -1vw;
 }
 
-.black__playerslist-gamer {
+.black__gamer {
    position: relative;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
 }
 
-.black__playerslist-info {
+.black__info {
    display: flex;
    align-items: center;
-   justify-content: space-around;
+   justify-content: space-evenly;
    width: 100%;
-   margin-bottom: 10px;
+   margin-bottom: 5px;
+   font-size: 20px;
 }
 
-.black__playerslist-wrapper {
+.black__wrapper {
    display: flex;
    gap: 5px;
 }
@@ -58,4 +67,19 @@
    width: 100%;
    text-align: center;
    padding-top: 10px;
+}
+
+.back-links {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   padding: 0 2vw;
+}
+
+.black__player-funclist {
+   margin-top: 30px;
+}
+
+.black__player-funcitem {
+   margin-bottom: 20px;
 }

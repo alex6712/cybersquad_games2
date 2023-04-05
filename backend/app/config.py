@@ -28,6 +28,8 @@ class Settings(BaseSettings):
         ФИО ответственного
     ADMIN_EMAIL: EmailStr
         адрес электронной почты для связи с ответственным
+    DEV_MODE: bool
+        режим разработки
     DOMAIN: str | IPvAnyAddress
         IP домена, на котором расположено приложение
     BACKEND_PORT: int
@@ -49,6 +51,8 @@ class Settings(BaseSettings):
 
     ADMIN_NAME: str = "Ванюков Алексей Игоревич"
     ADMIN_EMAIL: EmailStr = "vanyukov.alex@gmail.com"
+
+    DEV_MODE: bool = True
 
     DOMAIN: str | IPvAnyAddress = "127.0.0.1"
 

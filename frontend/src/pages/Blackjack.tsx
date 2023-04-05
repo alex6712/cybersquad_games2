@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
 import CardItem from '../components/CardItem'
-import cards from '../cards'
 import '../styles/blackjack.css'
 import GamerItem from '../components/GamerItem'
 import { Player } from '../types/Player'
@@ -11,7 +10,7 @@ type Props = {}
 
 // создатель - стол
 // остальные игроки
-let gamer_type = 'player' // 'diler' / 'player'
+let gamer_type = 'diler' // 'diler' / 'player'
 let gamestate = 'Ожидание игроков...' // 'Ожидание игроков...' / 'ИГРА ИДЕТ'
 let length_players: number
 let angle: number
@@ -115,42 +114,68 @@ function insurance() {
 function Blackjack({ }: Props) {
    const [diler, setDiler] = useState(
       {
-         name: 'Diler', score: 10, cards: [
-            { name: 'heart_11', rank: 11, suit: 'heart' },
-            { name: 'heart_7', rank: 7, suit: 'heart' }
+         login: 'Diler', score: 10, hands: [
+            { rank: 11, suit: 'heart' },
+            { rank: 7, suit: 'heart' }
          ]
       }
    )
 
    const [players, setPlayers] = useState([
       {
-         name: 'Alexandr', id: 0, bid: 100, state: 'game', moving: true, cards: [
-            { name: 'clover_3', rank: 3, suit: 'clover' },
-            { name: 'heart_3', rank: 3, suit: 'heart' }
+         login: 'Alexandr', id: 0, bet: 100, state: 'play', hands: [
+            {
+               cards: [
+                  { rank: 3, suit: 'clover' },
+                  { rank: 3, suit: 'heart' }
+               ]
+            },
+            {
+               cards: [
+                  { rank: 4, suit: 'clover' },
+                  { rank: 5, suit: 'heart' }
+               ]
+            }
          ]
       },
       {
-         name: 'Alex', id: 1, bid: 100, state: 'game', moving: false, cards: [
-            { name: 'pike_14', rank: 14, suit: 'pike' },
-            { name: 'tile_14', rank: 14, suit: 'tile' }
+         login: 'Alex', id: 1, bet: 100, state: 'in_game', hands: [
+            {
+               cards: [
+                  { rank: 14, suit: 'pike' },
+                  { rank: 14, suit: 'tile' }
+               ]
+            }
          ]
       },
       {
-         name: 'Danil', id: 2, bid: 100, state: 'game', moving: false, cards: [
-            { name: 'pike_2', rank: 2, suit: 'pike' },
-            { name: 'pike_3', rank: 2, suit: 'pike' }
+         login: 'Danil', id: 2, bet: 100, state: 'in_game', hands: [
+            {
+               cards: [
+                  { rank: 2, suit: 'pike' },
+                  { rank: 2, suit: 'pike' }
+               ]
+            }
          ]
       },
       {
-         name: 'Max', id: 3, bid: 100, state: 'game', moving: false, cards: [
-            { name: 'clover_12', rank: 12, suit: 'clover' },
-            { name: 'clover_13', rank: 13, suit: 'clover' }
+         login: 'Max', id: 3, bet: 100, state: 'in_game', hands: [
+            {
+               cards: [
+                  { rank: 12, suit: 'clover' },
+                  { rank: 13, suit: 'clover' }
+               ]
+            }
          ]
       },
       {
-         name: 'Nastya', id: 4, bid: 100, state: 'game', moving: false, cards: [
-            { name: 'tile_4', rank: 4, suit: 'tile' },
-            { name: 'clover_8', rank: 8, suit: 'clover' }
+         login: 'Nastya', id: 4, bet: 100, state: 'in_game', hands: [
+            {
+               cards: [
+                  { rank: 4, suit: 'tile' },
+                  { rank: 8, suit: 'clover' }
+               ]
+            }
          ]
       },
    ])
@@ -181,59 +206,64 @@ function Blackjack({ }: Props) {
                   ? // PLAYER
                   <div className="black__player">
                      {
-                        my_game_id != -1
+                        players[my_game_id].state == 'in_game' || players[my_game_id].state == 'play'
                            ?
                            <>
-                              <GamerItem player={players[my_game_id]}></GamerItem>
-                              <div className="black__player-info">
-                                 {
-                                    players[my_game_id].moving
-                                       ?
-                                       <ul className="black__player-funclist">
-                                          <li className="black__player-funcitem">
-                                             <Mybtn inp_type='button' style={{ width: '100%' }} onClick={get_one_card}>Взять еще 1 карту</Mybtn>
-                                          </li>
-
-                                          {
-                                             isFirstMove(players[my_game_id])
-                                                ?
+                              <GamerItem key={players[my_game_id].id} player={players[my_game_id]}></GamerItem>
+                              {
+                                 players[my_game_id].state == 'play'
+                                    ?
+                                    <div className="black__player-info">
+                                       {
+                                          players[my_game_id].state == 'play'
+                                             ?
+                                             <ul className="black__player-funclist">
                                                 <li className="black__player-funcitem">
-                                                   <Mybtn inp_type='button' style={{ width: '100%' }} onClick={get_oneCard_doubleDown}>Взять 1 карту и удвоить ставку</Mybtn>
+                                                   <Mybtn inp_type='button' style={{ width: '100%' }} onClick={get_one_card}>Взять еще 1 карту</Mybtn>
                                                 </li>
-                                                : <></>
-                                          }
 
-                                          {
-                                             isIdenticalСards(players[my_game_id])
-                                                ?
+                                                {
+                                                   isFirstMove(players[my_game_id])
+                                                      ?
+                                                      <li className="black__player-funcitem">
+                                                         <Mybtn inp_type='button' style={{ width: '100%' }} onClick={get_oneCard_doubleDown}>Взять 1 карту и удвоить ставку</Mybtn>
+                                                      </li>
+                                                      : <></>
+                                                }
+
+                                                {
+                                                   isIdenticalСards(players[my_game_id])
+                                                      ?
+                                                      <li className="black__player-funcitem">
+                                                         <Mybtn inp_type='button' style={{ width: '100%' }} onClick={splitHands}>Разделить на 2 руки</Mybtn>
+                                                      </li>
+                                                      : <></>
+                                                }
+
+
                                                 <li className="black__player-funcitem">
-                                                   <Mybtn inp_type='button' style={{ width: '100%' }} onClick={splitHands}>Разделить на 2 руки</Mybtn>
+                                                   <Mybtn inp_type='button' style={{ width: '100%' }} onClick={fold}>Фолд</Mybtn>
                                                 </li>
-                                                : <></>
-                                          }
 
+                                                {
+                                                   isDilerAce()
+                                                      ?
+                                                      <li className="black__player-funcitem">
+                                                         <Mybtn inp_type='button' style={{ width: '100%' }} onClick={insurance}>Страховка</Mybtn>
+                                                      </li>
+                                                      : <></>
+                                                }
 
-                                          <li className="black__player-funcitem">
-                                             <Mybtn inp_type='button' style={{ width: '100%' }} onClick={fold}>Фолд</Mybtn>
-                                          </li>
+                                             </ul>
+                                             : <></>
+                                       }
 
-                                          {
-                                             isDilerAce()
-                                                ?
-                                                <li className="black__player-funcitem">
-                                                   <Mybtn inp_type='button' style={{ width: '100%' }} onClick={insurance}>Страховка</Mybtn>
-                                                </li>
-                                                : <></>
-                                          }
+                                    </div>
+                                    : <></>
+                              }
 
-                                       </ul>
-                                       : <></>
-                                 }
-
-                              </div>
                            </>
-                           : <div>Игрок с вашим my_game_id отсутствует в игре, либо у вас несуществующий
-                              my_game_id</div>
+                           : <div style={{ textAlign: "center" }}>Пожалуйста подождите, пока текущий игровой кон закончится</div>
                      }
                      {/* ФУНКЦИОНАЛЬНЫЕ КНОПКИ */}
                   </div>
@@ -241,8 +271,8 @@ function Blackjack({ }: Props) {
                   <div className="black__table">
                      <div className="black__table-main">
                         <div className="black__table-wrapper">
-                           {diler.cards.map((card) =>
-                              <CardItem name={card.name} rank={card.rank} suit={card.suit}></CardItem>
+                           {diler.hands.map((card) =>
+                              <CardItem key={players[my_game_id].id} rank={card.rank} suit={card.suit}></CardItem>
                            )}
                         </div>
                         <h1 className='black__table-info'>{diler.score}</h1>
@@ -253,7 +283,7 @@ function Blackjack({ }: Props) {
                            ?
                            <ul className="black__playerslist" id='black__playerslist'>
                               {players.map(player =>
-                                 <GamerItem player={player}></GamerItem>
+                                 <GamerItem key={players[my_game_id].id} player={player}></GamerItem>
                               )}
                            </ul>
                            : <div>ОЖИДАНИЕ ИГРОКОВ</div>

@@ -14,3 +14,6 @@ __pycache__/
 # API test scripts #
 test/
 *.http
+
+# .env
+.env

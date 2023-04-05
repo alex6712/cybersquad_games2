@@ -7,14 +7,19 @@ type Props = {
 }
 
 function GamerItem({ player }: Props) {
+   let hands = player.hands
    return (
       <li className="black__gamer">
-         <h1 className='black__info'><span>{player.name}</span> <span>{player.bid}</span></h1>
-         <div className="black__wrapper">
-            {player.cards.map((card) =>
-               <CardItem name={card.name} rank={card.rank} suit={card.suit}></CardItem>
-            )}
-         </div>
+         <h1 className='black__info'><span>{player.login}</span> <span>{player.bet}</span></h1>
+         {player.hands.map(hand =>
+            <div className="black__wrapper">
+               {
+                  hand.cards.map(card =>
+                     <CardItem rank={card.rank} suit={card.suit}></CardItem>
+                  )
+               }
+            </div>
+         )}
       </li>
    )
 }

@@ -10,9 +10,10 @@ function GamerItem({ player }: Props) {
    let hands = player.hands
    return (
       <li className="black__gamer">
-         <h1 className='black__info'><span>{player.login}</span> <span>{player.bet}</span></h1>
+         <h1 className='black__info'><span>{player.login}</span> </h1>
          {player.hands.map(hand =>
             <div className="black__wrapper">
+               <p>{hand.bet}</p>
                {
                   hand.cards.map(card =>
                      <CardItem rank={card.rank} suit={card.suit}></CardItem>

@@ -1,12 +1,12 @@
 export type Player = {
    login: string,
-   bet: number,
    id: number,
    state: string, // 'wait' or 'in_game' or 'play'
    hands: Hand[]
 }
 
 type Hand = {
+   bet: number,
    cards: Card[]
 }
 

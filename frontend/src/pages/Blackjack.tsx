@@ -32,6 +32,9 @@ function fetchGamers(players: Player[]) {
       gamestate = 'ИГРА ИДЕТ'
    else
       gamestate = 'Ожидание игроков...'
+   if (length_players > 1 && wrapper_g)
+      // wrapper_g.style.marginTop = `-${2 * length_players}em`
+      wrapper_g.style.marginTop = `-10em`
    angle = 60 / length_players;
    screen_width = window.screen.width
    screen_height = window.screen.height
@@ -56,15 +59,6 @@ function fetchGamers(players: Player[]) {
          }
       }
    }
-
-   // if (gamers ) {
-   //    for (let i = 0; i < length_players; i++) {
-   //       let el = gamers[i]
-   //       const hui = -2 * Math.cos(Math.PI * i / (length_players - 1))
-   //       el.style.top = Math.abs(Math.cos(toRadians((length_players / 2) * angle * hui)) * delta) + 'px'
-   //       el.style.transform = `rotate(${-angle * hui}deg)`
-   //    }
-   // }
 }
 
 function exitTable() {
@@ -123,14 +117,16 @@ function Blackjack({ }: Props) {
 
    const [players, setPlayers] = useState([
       {
-         login: 'Alexandr', id: 0, bet: 100, state: 'play', hands: [
+         login: 'Alexandr', id: 0, state: 'play', hands: [
             {
+               bet: 100,
                cards: [
                   { rank: 3, suit: 'clover' },
                   { rank: 3, suit: 'heart' }
                ]
             },
             {
+               bet: 100,
                cards: [
                   { rank: 4, suit: 'clover' },
                   { rank: 5, suit: 'heart' }
@@ -141,9 +137,17 @@ function Blackjack({ }: Props) {
       {
          login: 'Alex', id: 1, bet: 100, state: 'in_game', hands: [
             {
+               bet: 100,
                cards: [
                   { rank: 14, suit: 'pike' },
                   { rank: 14, suit: 'tile' }
+               ]
+            },
+            {
+               bet: 100,
+               cards: [
+                  { rank: 4, suit: 'clover' },
+                  { rank: 5, suit: 'heart' }
                ]
             }
          ]
@@ -151,9 +155,17 @@ function Blackjack({ }: Props) {
       {
          login: 'Danil', id: 2, bet: 100, state: 'in_game', hands: [
             {
+               bet: 100,
                cards: [
                   { rank: 2, suit: 'pike' },
                   { rank: 2, suit: 'pike' }
+               ]
+            },
+            {
+               bet: 100,
+               cards: [
+                  { rank: 4, suit: 'clover' },
+                  { rank: 5, suit: 'heart' }
                ]
             }
          ]
@@ -161,9 +173,17 @@ function Blackjack({ }: Props) {
       {
          login: 'Max', id: 3, bet: 100, state: 'in_game', hands: [
             {
+               bet: 100,
                cards: [
                   { rank: 12, suit: 'clover' },
                   { rank: 13, suit: 'clover' }
+               ]
+            },
+            {
+               bet: 100,
+               cards: [
+                  { rank: 4, suit: 'clover' },
+                  { rank: 5, suit: 'heart' }
                ]
             }
          ]
@@ -171,9 +191,17 @@ function Blackjack({ }: Props) {
       {
          login: 'Nastya', id: 4, bet: 100, state: 'in_game', hands: [
             {
+               bet: 100,
                cards: [
                   { rank: 4, suit: 'tile' },
                   { rank: 8, suit: 'clover' }
+               ]
+            },
+            {
+               bet: 100,
+               cards: [
+                  { rank: 4, suit: 'clover' },
+                  { rank: 5, suit: 'heart' }
                ]
             }
          ]

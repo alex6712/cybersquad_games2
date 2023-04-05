@@ -53,7 +53,16 @@
 
 .black__wrapper {
    display: flex;
-   gap: 5px;
+   justify-content: space-evenly;
+   flex-wrap: wrap;
+   margin-bottom: 5px;
+   /* gap: 5px; */
+}
+
+.black__wrapper p {
+   width: 100%;
+   text-align: center;
+   margin-bottom: -5px;
 }
 
 .black__table-wrapper {

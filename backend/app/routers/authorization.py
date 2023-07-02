@@ -51,7 +51,7 @@ async def sign_in(
     return {"access_token": jwt, "token_type": "bearer"}
 
 
-@router.post("/sign_up", status_code=status.HTTP_201_CREATED, tags=["authorization"])
+@router.post("/sign_up", status_code=status.HTTP_201_CREATED, response_model=StandardResponse, tags=["authorization"])
 async def sign_up(user: APIUserWithPasswordModel, session: Annotated[AsyncSession, Depends(get_session)]):
     """
     Метод регистрации.

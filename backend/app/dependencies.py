@@ -13,7 +13,7 @@ from app.jwt import jwt_decode
 from app.services import user_service
 from database.session import get_session
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/authorization/sign_in")
 
 
 async def get_current_user(

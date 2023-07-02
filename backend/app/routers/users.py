@@ -24,7 +24,7 @@ async def me(user: Annotated[APIUserModel, Depends(get_current_user)]):
     return user
 
 
-@router.get("/{username}")
+@router.get("/{username}", response_model=APIUserModel)
 async def person(
         username: str,
         user: Annotated[APIUserModel, Depends(get_current_user)],

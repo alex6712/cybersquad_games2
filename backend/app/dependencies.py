@@ -5,15 +5,12 @@ from fastapi import (
     status,
     HTTPException,
 )
-from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.jwt import jwt_decode
+from app.jwt import jwt_decode, oauth2_scheme
 from app.services import user_service
 from database.session import get_session
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/authorization/sign_in")
 
 
 async def get_current_user(

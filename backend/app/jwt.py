@@ -8,7 +8,7 @@ from jose import jwt
 SECRET_KEY = "79871f2dd656ab8e91a5f96142763f12aed8d6a4d6bc7cf9aaa9ebe597487323"
 ALGORITHM = "HS256"
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/authorization/sign_in")
 
 
 def jwt_encode(to_encode: dict) -> str:

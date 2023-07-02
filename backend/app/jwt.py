@@ -18,7 +18,7 @@ def jwt_encode(to_encode: dict) -> str:
     :param to_encode: dict[str, str], словарь, который будет вложен в JWT
     :return: str, JSON Web Token
     """
-    return jwt.encode(to_encode, SECRET_KEY, ALGORITHM)
+    return jwt.encode(to_encode, key=SECRET_KEY, algorithm=ALGORITHM)
 
 
 def jwt_decode(token: Annotated[str, Depends(oauth2_scheme)]):
@@ -28,7 +28,7 @@ def jwt_decode(token: Annotated[str, Depends(oauth2_scheme)]):
     :param token: str, JWT, из которого будет получен словарь
     :return: dict[str, str], словарь с информацией из JWT
     """
-    return jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+    return jwt.decode(token, key=SECRET_KEY, algorithms=[ALGORITHM])
 
 
 def create_jwt(data: dict, expires_delta: timedelta = timedelta(minutes=5)):

@@ -1,13 +1,18 @@
 from datetime import timedelta
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, status, HTTPException
+from fastapi import (
+    APIRouter,
+    Depends,
+    status,
+    HTTPException,
+)
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.jwt import create_jwt
-from app.models import UserModel
+from app.models import APIUserWithPasswordModel
 from app.responses import StandardResponse
 from app.services import user_service
 from database.session import get_session
@@ -33,12 +38,12 @@ async def sign_in(
     :param session: AsyncSession, объект сессии запроса
     :return: dict[str, str], словарь с вложенным JWT
     """
-    db_user = await user_service.authenticate_user(session, form_data.username, form_data.password)
+    user = await user_service.authenticate_user(session, form_data.username, form_data.password)
 
-    if not db_user:
+    if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
+            detail="Incorrect username or password.",
             headers={"WWW-Authenticate": "Bearer"},
         )
 
@@ -47,7 +52,7 @@ async def sign_in(
 
 
 @router.post("/sign_up", status_code=status.HTTP_201_CREATED, tags=["authorization"])
-async def sign_up(user: UserModel, session: Annotated[AsyncSession, Depends(get_session)]):
+async def sign_up(user: APIUserWithPasswordModel, session: Annotated[AsyncSession, Depends(get_session)]):
     """
     Метод регистрации.
 

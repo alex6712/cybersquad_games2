@@ -1,6 +1,10 @@
 from typing import Annotated
 
-from fastapi import Depends, status, HTTPException
+from fastapi import (
+    Depends,
+    status,
+    HTTPException,
+)
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -33,12 +37,12 @@ async def get_current_user(
     )
 
     try:
-        if username := jwt_decode(token).get("sub") is None:
+        if (username := jwt_decode(token).get("sub")) is None:
             raise credentials_exception
     except JWTError:
         raise credentials_exception
 
-    if user := await user_service.get_user_by_username(session, username) is None:
+    if (user := await user_service.get_user_by_username(session, username)) is None:
         raise credentials_exception
 
     return user

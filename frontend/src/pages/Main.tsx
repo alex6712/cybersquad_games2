@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import Menuitem from '../components/UI/Menuitem'
+import Menuitem from '../components/Menuitem'
 
 type Props = {}
 

@@ -1,6 +1,8 @@
 import React from 'react'
 import Myinput from '../components/UI/Myinput'
 import '../styles/auth.css'
+import Mybtn from '../components/UI/Mybtn'
+import Mylink from '../components/UI/Mylink'
 
 type Props = {}
 
@@ -25,7 +27,7 @@ function register() {
 function Registration({ }: Props) {
    return (
       <div className="auth">
-         <a className="auth__back-link" href='/'>Назад</a>
+         <Mylink inp_href='/'>Назад</Mylink>
          <div className="container">
             <div className="auth__wrapper">
                <form action="" className="auth__form">
@@ -48,7 +50,7 @@ function Registration({ }: Props) {
                   </div>
 
                   <div className="auth__form-item">
-                     <button type="button" className="auth__form-btn" onClick={register}>Зарегестрироваться</button>
+                     <Mybtn inp_type='button' style={{ width: '100%' }} onClick={register}>Зарегестрироваться</Mybtn>
                   </div>
 
                </form>

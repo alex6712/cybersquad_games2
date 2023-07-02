@@ -1,6 +1,8 @@
 import React from 'react'
 import Myinput from '../components/UI/Myinput'
 import '../styles/auth.css'
+import Mylink from '../components/UI/Mylink'
+import Mybtn from '../components/UI/Mybtn'
 
 type Props = {}
 
@@ -26,7 +28,7 @@ function get_l() {
 function Auth({ }: Props) {
    return (
       <div className="auth">
-         <a className="auth__back-link" href='/'>Назад</a>
+         <Mylink inp_href='/'>Назад</Mylink>
          <div className="container">
             <div className="auth__wrapper">
                <form action="" className="auth__form">
@@ -44,7 +46,7 @@ function Auth({ }: Props) {
                   </div>
 
                   <div className="auth__form-item">
-                     <button type="button" className="auth__form-btn" onClick={get_l}>Войти</button>
+                     <Mybtn inp_type='button' style={{ width: '100%' }} onClick={get_l}>Войти</Mybtn>
                   </div>
 
                </form>

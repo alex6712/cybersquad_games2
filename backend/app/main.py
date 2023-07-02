@@ -5,8 +5,12 @@ from app.responses import (
     StandardResponse,
     AppInfoResponse,
 )
+from app.routers import (
+    users_router,
+    authorization_router,
+)
 
-app = FastAPI(
+cybersquad_games = FastAPI(
     title=settings.APP_NAME,
     version=settings.APP_VERSION,
     description=settings.APP_DESCRIPTION,
@@ -15,9 +19,11 @@ app = FastAPI(
         "email": settings.ADMIN_EMAIL,
     },
 )
+cybersquad_games.include_router(users_router)
+cybersquad_games.include_router(authorization_router)
 
 
-@app.get("/", status_code=status.HTTP_200_OK, response_model=StandardResponse)
+@cybersquad_games.get("/", status_code=status.HTTP_200_OK, response_model=StandardResponse, tags=["root"])
 async def root():
     """
     Корневой путь для проверки работоспособности API.
@@ -29,7 +35,7 @@ async def root():
     return StandardResponse(message="API works!")
 
 
-@app.get("/app_info", status_code=status.HTTP_200_OK, response_model=AppInfoResponse)
+@cybersquad_games.get("/app_info", status_code=status.HTTP_200_OK, response_model=AppInfoResponse, tags=["root"])
 async def app_info():
     """
     Путь для получения информации о серверной части приложения.

@@ -28,6 +28,8 @@ class Settings(BaseSettings):
         ФИО ответственного
     ADMIN_EMAIL: EmailStr
         адрес электронной почты для связи с ответственным
+    DEV_MODE: bool
+        режим разработки
     DOMAIN: str | IPvAnyAddress
         IP домена, на котором расположено приложение
     BACKEND_PORT: int
@@ -44,18 +46,20 @@ class Settings(BaseSettings):
         строка подключения (ссылка) к базе данных
     """
     APP_NAME: str = "CYBERSQUAD Games"
-    APP_VERSION: str = "2.0.0"
+    APP_VERSION: str = "2.1.0"
     APP_DESCRIPTION: str = "API серверной части локальной игровой платформы от команды CYBERSQUAD."
 
     ADMIN_NAME: str = "Ванюков Алексей Игоревич"
     ADMIN_EMAIL: EmailStr = "vanyukov.alex@gmail.com"
 
+    DEV_MODE: bool = True
+
     DOMAIN: str | IPvAnyAddress = "127.0.0.1"
 
     BACKEND_PORT: int = 8080
 
-    DATABASE_USER: str = "root"
-    DATABASE_PASSWORD: str = "toor"
+    DATABASE_USER: str = "postgres"
+    DATABASE_PASSWORD: str = "1AlexandR2"
     DATABASE_PORT: int = 5432
     DATABASE_NAME: str = "cybersquad_games"
 

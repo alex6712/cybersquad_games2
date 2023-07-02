@@ -8,3 +8,4 @@ vanyukov.alex@gmail.com
 """
 
 from .users import router as users_router
+from .authorization import router as authorization_router

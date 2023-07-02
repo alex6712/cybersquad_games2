@@ -1,14 +1,16 @@
-from fastapi import APIRouter, Depends, HTTPException
+from typing import Annotated
 
-from ..dependencies import get_token_header
+from fastapi import APIRouter, Depends
+
+from app.dependencies import get_current_user
+from app.models import UserModel
 
 router = APIRouter(
     prefix="/users",
     tags=["users"],
-    dependencies=[Depends(get_token_header)],
 )
 
 
 @router.get("/me")
-async def read_items():
-    return
+async def me(user: Annotated[UserModel, Depends(get_current_user)]):
+    return user

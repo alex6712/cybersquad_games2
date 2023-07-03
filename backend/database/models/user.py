@@ -5,7 +5,7 @@ from sqlalchemy.orm import mapped_column
 from database.models import DBBaseModel
 
 
-class User(DBBaseModel):
+class DBUserModel(DBBaseModel):
     __tablename__ = "user"
 
     username: Mapped[str] = mapped_column(String(256), nullable=False)

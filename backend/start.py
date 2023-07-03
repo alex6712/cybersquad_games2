@@ -1,9 +1,11 @@
 import uvicorn
 
-from app import settings
+from app import get_settings
 
 
 if __name__ == "__main__":
+    settings = get_settings()
+
     uvicorn.run(
         app="app.main:cybersquad_games",
         host=settings.DOMAIN,

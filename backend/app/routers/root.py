@@ -1,9 +1,13 @@
+from typing import Annotated
+
 from fastapi import (
     APIRouter,
     status,
+    Depends,
 )
 
-from app import settings
+from app import get_settings
+from app.config import Settings
 from app.responses import (
     StandardResponse,
     AppInfoResponse,
@@ -27,7 +31,7 @@ async def root():
 
 
 @router.get("/app_info", status_code=status.HTTP_200_OK, response_model=AppInfoResponse, tags=["root"])
-async def app_info():
+async def app_info(settings: Annotated[Settings, Depends(get_settings)]):
     """
     Путь для получения информации о серверной части приложения.
 
@@ -38,6 +42,7 @@ async def app_info():
         * admin_name: str, ФИО ответственного
         * admin_email: str, адрес электронной почты для связи с ответственным
 
+    :param settings: Settings, настройки приложения
     :return: InfoResponse, ответ, содержащий информацию о серверной части приложения
     """
     return AppInfoResponse(

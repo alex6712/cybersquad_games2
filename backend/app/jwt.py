@@ -1,14 +1,10 @@
 from datetime import datetime, timedelta
-from typing import Annotated
 
-from fastapi import Depends
-from fastapi.security import OAuth2PasswordBearer
 from jose import jwt
 
-SECRET_KEY = "79871f2dd656ab8e91a5f96142763f12aed8d6a4d6bc7cf9aaa9ebe597487323"
-ALGORITHM = "HS256"
+from app import get_settings
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/authorization/sign_in")
+settings = get_settings()
 
 
 def jwt_encode(to_encode: dict) -> str:
@@ -18,17 +14,17 @@ def jwt_encode(to_encode: dict) -> str:
     :param to_encode: dict[str, str], словарь, который будет вложен в JWT
     :return: str, JSON Web Token
     """
-    return jwt.encode(to_encode, key=SECRET_KEY, algorithm=ALGORITHM)
+    return jwt.encode(to_encode, key=settings.JWT_SECRET_KEY, algorithm=settings.JWT_ALGORITHM)
 
 
-def jwt_decode(token: Annotated[str, Depends(oauth2_scheme)]):
+def jwt_decode(token: str) -> dict:
     """
     Декодирует переданный JWT в словарь.
 
     :param token: str, JWT, из которого будет получен словарь
     :return: dict[str, str], словарь с информацией из JWT
     """
-    return jwt.decode(token, key=SECRET_KEY, algorithms=[ALGORITHM])
+    return jwt.decode(token, key=settings.JWT_SECRET_KEY, algorithms=[settings.JWT_ALGORITHM])
 
 
 def create_jwt(data: dict, expires_delta: timedelta = timedelta(minutes=5)):

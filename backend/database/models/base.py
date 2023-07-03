@@ -5,7 +5,7 @@ from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
 
-class BaseModel(Base):
+class DBBaseModel(Base):
     __abstract__ = True
 
     id: Mapped[int] = mapped_column(nullable=False, unique=True, primary_key=True, autoincrement=True)
@@ -14,7 +14,7 @@ class BaseModel(Base):
         return f"<{self.__class__.__name__}(id={self.id!r})>"
 
 
-class JoinBaseModel(Base):
+class DBJoinBaseModel(Base):
     __abstract__ = True
 
     def __repr__(self) -> str:

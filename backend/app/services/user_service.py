@@ -19,7 +19,7 @@ async def get_user_by_username(session: AsyncSession, username: str) -> APIUserM
     :param username: str, логин пользователя, уникальное имя
     :return: User, модель записи пользователя
     """
-    db_user = await session.scalar(select(DBUserModel).where(DBUserModel.username == username))
+    db_user: DBUserModel = await session.scalar(select(DBUserModel).where(DBUserModel.username == username))
 
     if not db_user:
         return None
@@ -38,7 +38,7 @@ async def authenticate_user(session: AsyncSession, username: str, password: str)
     :param password: str, пароль пользователя
     :return: User, модель записи пользователя
     """
-    db_user = await session.scalar(select(DBUserModel).where(DBUserModel.username == username))
+    db_user: DBUserModel = await session.scalar(select(DBUserModel).where(DBUserModel.username == username))
 
     if not db_user:
         return None
@@ -48,14 +48,21 @@ async def authenticate_user(session: AsyncSession, username: str, password: str)
     return APIUserModel(username=db_user.username, email=db_user.email, phone=db_user.phone)
 
 
-def add_user(session: AsyncSession, user: APIUserWithPasswordModel):
+async def add_user(session: AsyncSession, user: APIUserWithPasswordModel) -> bool:
     """
     Добавляет запись о пользователе в базу данных.
 
     :param session: AsyncSession, объект сессии запроса
     :param user: UserModel, модель объекта пользователя
     """
+    db_user: APIUserModel = await get_user_by_username(session, user.username)
+
+    if db_user:
+        return False
+
     new_user = DBUserModel(username=user.username, email=user.email, phone=user.phone)
     new_user.password = pwd_context.hash(user.password)
 
     session.add(new_user)
+
+    return True

@@ -1,11 +1,13 @@
 from fastapi import FastAPI
 
-from app import settings
+from app import get_settings
 from app.routers import (
     authorization_router,
     root_router,
     users_router,
 )
+
+settings = get_settings()
 
 cybersquad_games = FastAPI(
     title=settings.APP_NAME,

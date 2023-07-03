@@ -18,6 +18,6 @@ vanyukov.alex@gmail.com
 
 __author__ = "Алексей Ванюков"
 
-from .config import settings
+from .config import get_settings
 
-__version__ = settings.APP_VERSION
+__version__ = get_settings().APP_VERSION

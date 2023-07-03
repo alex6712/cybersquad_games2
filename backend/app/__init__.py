@@ -1,5 +1,5 @@
 """
-Factory CRM
+Cybersquad Games
 
 Source directory серверной части приложения.
 

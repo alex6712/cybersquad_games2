@@ -8,7 +8,7 @@ from fastapi import (
 
 from app import get_settings
 from app.config import Settings
-from app.responses import (
+from app.models.responses import (
     StandardResponse,
     AppInfoResponse,
 )
@@ -27,7 +27,7 @@ async def root():
 
     :return: StandardResponse, ответ о корректной работе сервера
     """
-    return StandardResponse(message="API works!")
+    return {"status_code": status.HTTP_200_OK, "message": "API works!"}
 
 
 @router.get("/app_info", status_code=status.HTTP_200_OK, response_model=AppInfoResponse, tags=["root"])
@@ -45,10 +45,10 @@ async def app_info(settings: Annotated[Settings, Depends(get_settings)]):
     :param settings: Settings, настройки приложения
     :return: InfoResponse, ответ, содержащий информацию о серверной части приложения
     """
-    return AppInfoResponse(
-        app_name=settings.APP_NAME,
-        app_version=settings.APP_VERSION,
-        app_description=settings.APP_DESCRIPTION,
-        admin_name=settings.ADMIN_NAME,
-        admin_email=settings.ADMIN_EMAIL,
-    )
+    return {
+        "app_name": settings.APP_NAME,
+        "app_version": settings.APP_VERSION,
+        "app_description": settings.APP_DESCRIPTION,
+        "admin_name": settings.ADMIN_NAME,
+        "admin_email": settings.ADMIN_EMAIL,
+    }

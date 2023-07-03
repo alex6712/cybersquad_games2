@@ -1,7 +1,9 @@
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from app.models.responses import StandardResponse
 
 
-class APIJSONWebTokenModel(BaseModel):
+class TokenResponse(StandardResponse):
     """
     Модель ответа с вложенным JWT.
 

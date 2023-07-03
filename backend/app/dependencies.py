@@ -10,6 +10,7 @@ from jose import JWTError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.jwt import jwt_decode
+from app.models import APIUserModel
 from app.services import user_service
 from database.session import get_session
 
@@ -19,7 +20,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/sign_in")
 async def get_current_user(
         token: Annotated[str, Depends(oauth2_scheme)],
         session: Annotated[AsyncSession, Depends(get_session)]
-):
+) -> APIUserModel:
     """
     Dependency для проверки JWT.
 
@@ -32,7 +33,7 @@ async def get_current_user(
     """
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
+        detail="Could not validate credentials.",
         headers={"WWW-Authenticate": "Bearer"},
     )
 

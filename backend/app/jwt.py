@@ -27,7 +27,7 @@ def jwt_decode(token: str) -> dict:
     return jwt.decode(token, key=settings.JWT_SECRET_KEY, algorithms=[settings.JWT_ALGORITHM])
 
 
-def create_jwt(data: dict, expires_delta: timedelta = timedelta(minutes=5)):
+def create_jwt(data: dict, expires_delta: timedelta = timedelta(minutes=5)) -> str:
     """
     Создаёт JWT.
 

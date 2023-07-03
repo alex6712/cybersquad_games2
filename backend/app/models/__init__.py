@@ -7,6 +7,5 @@ API DTO Factory CRM Models
 vanyukov.alex@gmail.com
 """
 
-from .jwt import APIJSONWebTokenModel
 from .user import APIUserModel
 from .user import APIUserWithPasswordModel

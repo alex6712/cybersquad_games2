@@ -36,7 +36,7 @@ async def sign_in(
 
     :param form_data: OAuth2PasswordRequestForm, аутентификационные данные пользователя
     :param session: AsyncSession, объект сессии запроса
-    :return: dict[str, str], словарь с вложенным JWT
+    :return: APIJSONWebTokenModel, модель ответа с вложенным JWT
     """
     user = await user_service.authenticate_user(session, form_data.username, form_data.password)
 

@@ -20,10 +20,9 @@ const Main = (props: Props) => {
          <div className="container">
             <div className="main__wrapper">
                <h2 className="main__title">Добро пожаловать на наш маркетплейс игр, выберите одну из игр:</h2>
-               РЕАКТ ХУЙ
                <ul className="main__menu">
                   {menu_games.map((game) =>
-                     <Menuitem id={game.id} name={game.name} link={game.link} />
+                     <Menuitem key={game.id} id={game.id} name={game.name} link={game.link} />
                   )}
                </ul>
             </div >

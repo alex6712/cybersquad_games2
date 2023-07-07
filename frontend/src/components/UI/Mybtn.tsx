@@ -15,7 +15,7 @@ function Mybtn({ children, params, style, inp_type, disabled, onClick }: Props) 
          type={inp_type}
          style={style}
          disabled={disabled}
-         onClick={onClick({ ...params })}
+         onClick={e => onClick({ ...params })}
          className="myBtn">
          {children}
       </button>

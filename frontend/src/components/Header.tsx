@@ -1,44 +1,42 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import '../styles/header.css'
+import { Link } from 'react-router-dom'
+import AuthService from '../api/authService'
 
 type Props = {}
 
 function Header(props: Props) {
 
-   const isAuth = true
+   let isAuth = localStorage.getItem('isAuth')
    const nickname = 'player'
 
+   useEffect(() => {
+      isAuth = localStorage.getItem('isAuth')
+   }, [, isAuth])
+
+
    function exit() {
+      isAuth = 'false'
+      localStorage.setItem('isAuth', 'false')
       localStorage.removeItem('nickname')
       localStorage.removeItem('key')
       localStorage.removeItem('id')
       window.location.reload()
    }
 
-   // ngOnInit(): void {
-   //    let token = localStorage.getItem('key');
-   //    this.nickname = localStorage.getItem('nickname');
-   //    if (token) {
-   //      this.isAuth = true;
-   //    }
-   //    else {
-   //      this.isAuth = false;
-   //    }
-   //  }
-
    return (
       <header className="header">
          <div className="container">
-            {isAuth
+            {isAuth === 'true'
                ? <div className="header__wrapper">
-                  <a className="header__link" href='/'>Главная</a>
+                  <Link className="header__link" to={`/`}>Главная</Link>
                   <div className="header__link" >Удачи, {nickname}</div>
-                  <a className="header__link" href='/' onClick={exit} >Выйти</a>
+                  <Link className="header__link" to={`/`} onClick={exit}>Выйти</Link>
                </div>
                : <div className="header__wrapper">
-                  <a className="header__link" href='/'>Главная</a>
-                  <a className="header__link" href='/auth' >Авторизация</a>
-                  <a className="header__link" href='/registration' >Регистрация</a>
+                  <Link className="header__link" to={`/`}>Главная</Link>
+                  <Link className="header__link" to={`/auth`}>Авторизация</Link>
+                  <Link className="header__link" to={`/registration`}>Регистрация</Link>
                </div>
             }
          </div>

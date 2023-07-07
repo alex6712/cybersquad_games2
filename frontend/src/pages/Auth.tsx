@@ -5,15 +5,16 @@ import Mylink from '../components/UI/Mylink'
 import Mybtn from '../components/UI/Mybtn'
 import AuthService from '../api/authService'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 type Props = {}
-
-
-
 
 function Auth({ }: Props) {
    const [login, setLogin] = useState<string>('')
    const [password, setPassword] = useState<string>('')
+   const navigate = useNavigate();
+   let data: any | null = null
+   const auth: AuthService = new AuthService()
 
    const loginHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
       setLogin(event.target.value)
@@ -29,18 +30,20 @@ function Auth({ }: Props) {
       }
    }
 
-   const sign_in = (login: string, password: string) => {
-      const requestOptions = {
-         method: 'POST',
-         headers: { 'Content-Type': 'application/json' },
-         body: JSON.stringify({ username: login, password })
+   async function sign_in(login: string, password: string) {
+      const formData = new URLSearchParams();
+      formData.append('grant_type', 'password');
+      formData.append('client_id', 'XXXX-app');
+      formData.append('username', login);
+      formData.append('password', password);
+
+      data = await auth.login(login, password, formData)
+
+      if (data.code === 200) {
+         localStorage.setItem('isAuth', 'true')
+         window.location.href = '/'
       }
-      // 127.0.0.1:8080/auth/sign_in
-      console.log(
-         fetch('http://google.conm', requestOptions)
-            .then(res => res.json())
-            .then(data => console.log(data))
-      )
+
    }
 
    return (
@@ -63,8 +66,7 @@ function Auth({ }: Props) {
                   </div>
 
                   <div className="auth__form-item">
-                     {/* <Mybtn inp_type='button' style={{ width: '100%' }} onClick={sign_in}>Войти</Mybtn> */}
-                     <div style={{ width: '100%' }} onClick={e => sign_in(login, password)}>Войти</div>
+                     <Mybtn inp_type='button' style={{ width: '100%' }} onClick={(e: any) => sign_in(login, password)}>Войти</Mybtn>
                   </div>
 
                </form>

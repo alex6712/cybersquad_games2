@@ -1,37 +1,33 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import '../styles/header.css'
 import { Link } from 'react-router-dom'
+import AuthService from '../api/authService'
 
 type Props = {}
 
 function Header(props: Props) {
 
-   let isAuth = false
+   let isAuth = localStorage.getItem('isAuth')
    const nickname = 'player'
 
+   useEffect(() => {
+      isAuth = localStorage.getItem('isAuth')
+   }, [, isAuth])
+
+
    function exit() {
-      isAuth = !isAuth
+      isAuth = 'false'
+      localStorage.setItem('isAuth', 'false')
       localStorage.removeItem('nickname')
       localStorage.removeItem('key')
       localStorage.removeItem('id')
       window.location.reload()
    }
 
-   // ngOnInit(): void {
-   //    let token = localStorage.getItem('key');
-   //    this.nickname = localStorage.getItem('nickname');
-   //    if (token) {
-   //      this.isAuth = true;
-   //    }
-   //    else {
-   //      this.isAuth = false;
-   //    }
-   //  }
-
    return (
       <header className="header">
          <div className="container">
-            {isAuth
+            {isAuth === 'true'
                ? <div className="header__wrapper">
                   <Link className="header__link" to={`/`}>Главная</Link>
                   <div className="header__link" >Удачи, {nickname}</div>

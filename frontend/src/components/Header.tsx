@@ -1,14 +1,16 @@
 import React from 'react'
 import '../styles/header.css'
+import { Link } from 'react-router-dom'
 
 type Props = {}
 
 function Header(props: Props) {
 
-   const isAuth = true
+   let isAuth = false
    const nickname = 'player'
 
    function exit() {
+      isAuth = !isAuth
       localStorage.removeItem('nickname')
       localStorage.removeItem('key')
       localStorage.removeItem('id')
@@ -31,14 +33,14 @@ function Header(props: Props) {
          <div className="container">
             {isAuth
                ? <div className="header__wrapper">
-                  <a className="header__link" href='/'>Главная</a>
+                  <Link className="header__link" to={`/`}>Главная</Link>
                   <div className="header__link" >Удачи, {nickname}</div>
-                  <a className="header__link" href='/' onClick={exit} >Выйти</a>
+                  <Link className="header__link" to={`/`} onClick={exit}>Выйти</Link>
                </div>
                : <div className="header__wrapper">
-                  <a className="header__link" href='/'>Главная</a>
-                  <a className="header__link" href='/auth' >Авторизация</a>
-                  <a className="header__link" href='/registration' >Регистрация</a>
+                  <Link className="header__link" to={`/`}>Главная</Link>
+                  <Link className="header__link" to={`/auth`}>Авторизация</Link>
+                  <Link className="header__link" to={`/registration`}>Регистрация</Link>
                </div>
             }
          </div>

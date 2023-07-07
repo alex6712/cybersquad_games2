@@ -21,7 +21,7 @@ function register() {
    //      this.router.navigate(['auth'])
    //    }
    //  })
-   window.location.href = '/'
+   // window.location.href = '/'
 }
 
 function Registration({ }: Props) {

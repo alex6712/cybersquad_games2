@@ -1,31 +1,48 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Myinput from '../components/UI/Myinput'
 import '../styles/auth.css'
 import Mylink from '../components/UI/Mylink'
 import Mybtn from '../components/UI/Mybtn'
+import AuthService from '../api/authService'
+import axios from 'axios'
 
 type Props = {}
 
-const login = ''
-const password = ''
-const req = ''
 
-// constructor(private router: Router, private service: AuthService) { }
 
-function get_l() {
-   // this.service.get_login(this.login, this.password).subscribe(value => {
-   //    this.req = value
-   //    if (this.req.response) {
-   //       localStorage.setItem('nickname', this.login)
-   //       localStorage.setItem('id', this.req.items[0].id)
-   //       localStorage.setItem('key', this.req.items[0].key)
-   //       this.router.navigate(['menu'])
-   //    }
-   // })
-   window.location.href = '/'
-}
 
 function Auth({ }: Props) {
+   const [login, setLogin] = useState<string>('')
+   const [password, setPassword] = useState<string>('')
+
+   const loginHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+      setLogin(event.target.value)
+   }
+
+   const passwordHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+      setPassword(event.target.value)
+   }
+
+   const loginPressHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
+      if (event.key === 'Enter') {
+         console.log(login, password)
+      }
+   }
+
+   const sign_in = (login: string, password: string) => {
+      const requestOptions = {
+         method: 'POST',
+         headers: { 'Content-Type': 'application/json' },
+         body: JSON.stringify({ username: login, password })
+      }
+      // 127.0.0.1:8080/auth/sign_in
+      console.log(
+         fetch('http://google.conm', requestOptions)
+            .then(res => res.json())
+            .then(data => console.log(data))
+      )
+   }
+
    return (
       <div className="auth">
          <Mylink inp_href='/'>Назад</Mylink>
@@ -37,16 +54,17 @@ function Auth({ }: Props) {
 
                   <div className="auth__form-item">
                      <p className="auth__form-text">Логин</p>
-                     <Myinput inp_type='text' />
+                     <Myinput inp_type='text' value={login} onChange={loginHandler} mykeypress={loginPressHandler} />
                   </div>
 
                   <div className="auth__form-item">
                      <p className="auth__form-text">Пароль</p>
-                     <Myinput inp_type='password' />
+                     <Myinput inp_type='password' value={password} onChange={passwordHandler} mykeypress={loginPressHandler} />
                   </div>
 
                   <div className="auth__form-item">
-                     <Mybtn inp_type='button' style={{ width: '100%' }} onClick={get_l}>Войти</Mybtn>
+                     {/* <Mybtn inp_type='button' style={{ width: '100%' }} onClick={sign_in}>Войти</Mybtn> */}
+                     <div style={{ width: '100%' }} onClick={e => sign_in(login, password)}>Войти</div>
                   </div>
 
                </form>

@@ -10,7 +10,7 @@ type Props = {}
 
 // создатель - стол
 // остальные игроки
-let gamer_type = 'diler' // 'diler' / 'player'
+let gamer_type = 'player' // 'diler' / 'player'
 let gamestate = 'Ожидание игроков...' // 'Ожидание игроков...' / 'ИГРА ИДЕТ'
 let length_players: number
 let angle: number
@@ -208,12 +208,53 @@ function Blackjack({ }: Props) {
       },
    ])
 
+   const [handCount, setHandCount] = useState(0)
+
    let my_game_id = 0
+
+   const switchHands = (event: any, idx: number) => {
+      const wrap = document.getElementById('black__gamer-wrapper')
+      console.log(wrap)
+      let hands: NodeListOf<HTMLElement> | undefined
+      if (wrap) {
+         hands = wrap.querySelectorAll('strong')
+      }
+      if (idx == 1 && hands) {
+         console.log(1, idx, hands)
+         hands[0].style.position = 'absolute'
+         hands[0].style.transform = 'translateX(-100%)'
+
+         hands[1].style.position = 'static'
+         hands[1].style.transform = 'translateX(0%)'
+
+         console.log(handCount)
+         setHandCount(1)
+         console.log(handCount)
+      } else if (idx == 0 && hands) {
+         console.log(0, idx, hands)
+         hands[0].style.position = 'static'
+         hands[0].style.transform = 'translateX(0%)'
+
+         hands[1].style.position = 'absolute'
+         hands[1].style.transform = 'translateX(100%)'
+
+         console.log(handCount)
+         setHandCount(0)
+         console.log(handCount)
+      }
+      console.log(hands)
+   }
+
 
    startGame(players)
    useEffect(() => {
       fetchGamers(players)
    }, [players])
+
+   // useEffect(() => {
+   //    switchHands(null, -1)
+   //    console.log('useeffect', handCount)
+   // }, [handCount])
 
    return (
       <div className='game_block'>
@@ -237,7 +278,22 @@ function Blackjack({ }: Props) {
                         players[my_game_id].state == 'in_game' || players[my_game_id].state == 'play'
                            ?
                            <>
-                              <GamerItem key={players[my_game_id].id} player={players[my_game_id]}></GamerItem>
+                              <GamerItem key={players[my_game_id].login} player={players[my_game_id]}></GamerItem>
+                              <div className="black__player-switches">
+                                 <button
+                                    className='black__player-switch'
+                                    type='button'
+                                    disabled={!handCount || players[my_game_id].hands.length == 1}
+                                    onClick={e => switchHands(e, 0)}>
+                                 </button>
+
+                                 <button
+                                    className='black__player-switch'
+                                    type='button'
+                                    disabled={!!handCount || players[my_game_id].hands.length == 1}
+                                    onClick={e => switchHands(e, 1)}>
+                                 </button>
+                              </div>
                               {
                                  players[my_game_id].state == 'play'
                                     ?

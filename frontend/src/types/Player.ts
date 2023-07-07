@@ -1,5 +1,5 @@
 export type Player = {
-   login: string,
+   login: string, // username
    id: number,
    state: string, // 'wait' or 'in_game' or 'play'
    hands: Hand[]

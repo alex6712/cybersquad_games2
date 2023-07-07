@@ -92,3 +92,41 @@
 .black__player-funcitem {
    margin-bottom: 20px;
 }
+
+.black__wrapper-cards {
+   display: flex;
+}
+
+.black__player .black__gamer-wrapper {
+   display: flex;
+   align-items: center;
+   justify-content: space-around;
+}
+
+.black__wrapper:nth-child(2) {
+   position: absolute;
+   transform: translateX(100%);
+}
+
+.black__player-switch {
+   z-index: 999;
+   position: absolute;
+   top: 9em;
+   width: 10vw;
+   left: 0;
+   height: 181px;
+   background: none;
+   border: none;
+   outline: none;
+   cursor: pointer;
+}
+
+.black__player-switch:disabled {
+   cursor: auto;
+   z-index: -1;
+}
+
+.black__player-switch:nth-child(2) {
+   left: auto;
+   right: 0;
+}

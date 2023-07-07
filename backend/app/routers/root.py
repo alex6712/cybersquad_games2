@@ -39,16 +39,18 @@ async def app_info(settings: Annotated[Settings, Depends(get_settings)]):
         * app_name: str, имя приложения
         * app_version: str, версия приложения
         * app_description: str, описание приложения
+        * app_summary: str, краткое описание приложения
         * admin_name: str, ФИО ответственного
         * admin_email: str, адрес электронной почты для связи с ответственным
 
     :param settings: Settings, настройки приложения
-    :return: InfoResponse, ответ, содержащий информацию о серверной части приложения
+    :return: AppInfoResponse, ответ, содержащий информацию о серверной части приложения
     """
     return {
         "app_name": settings.APP_NAME,
         "app_version": settings.APP_VERSION,
         "app_description": settings.APP_DESCRIPTION,
+        "app_summary": settings.APP_SUMMARY,
         "admin_name": settings.ADMIN_NAME,
         "admin_email": settings.ADMIN_EMAIL,
     }

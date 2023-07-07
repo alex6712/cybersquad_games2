@@ -9,7 +9,7 @@ from app import get_settings
 
 engine: AsyncEngine = create_async_engine(
     url=get_settings().DATABASE_URL,
-    echo=True,
+    echo=False,
     pool_pre_ping=True,
 )
 AsyncSessionMaker: async_sessionmaker = async_sessionmaker(bind=engine, class_=AsyncSession, expire_on_commit=False)

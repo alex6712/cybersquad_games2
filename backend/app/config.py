@@ -26,6 +26,8 @@ class Settings(BaseSettings):
         текущая версия приложения
     APP_DESCRIPTION: str
         описание приложения
+    APP_SUMMARY: str
+        краткое описание приложения
     ADMIN_NAME: str
         ФИО ответственного
     ADMIN_EMAIL: EmailStr
@@ -56,6 +58,7 @@ class Settings(BaseSettings):
     APP_NAME: str
     APP_VERSION: str
     APP_DESCRIPTION: str
+    APP_SUMMARY: str
 
     ADMIN_NAME: str
     ADMIN_EMAIL: EmailStr

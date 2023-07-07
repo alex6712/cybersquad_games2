@@ -17,6 +17,8 @@ class AppInfoResponse(StandardResponse):
         текущая версия приложения
     app_description: str
         описание приложения
+    app_summary: str
+        краткое описание приложения
     admin_name: str
         ФИО ответственного
     admin_email: str
@@ -25,5 +27,6 @@ class AppInfoResponse(StandardResponse):
     app_name: str = Field(example="Fast API")
     app_version: str = Field(example="0.0.0")
     app_description: str = Field(example="RESTful API с использованием FastAPI Python 3.10")
+    app_summary: str = Field(example="Лучшее веб-приложение.")
     admin_name: str = Field(example="Иванов Иван Иванович")
     admin_email: EmailStr = Field(example="ivanov.ivan@mail.ru")

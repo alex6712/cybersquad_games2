@@ -34,7 +34,7 @@ python start.py
 
 ```pycon
 cd backend
-python -m uvicorn main:app --reload --host <host> --port 8080
+python -m uvicorn app.main:cybersquad_games --reload --host <host> --port 8080
 ```
 
 ***

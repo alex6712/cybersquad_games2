@@ -9,3 +9,5 @@ vanyukov.alex@gmail.com
 
 from .standard import StandardResponse
 from .info import AppInfoResponse
+from .jwt import TokenResponse
+from .user import UserResponse

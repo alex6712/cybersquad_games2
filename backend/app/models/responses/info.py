@@ -1,6 +1,6 @@
 from pydantic import Field, EmailStr
 
-from app.responses import StandardResponse
+from app.models.responses import StandardResponse
 
 
 class AppInfoResponse(StandardResponse):

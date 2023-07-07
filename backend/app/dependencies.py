@@ -1,25 +1,49 @@
 from typing import Annotated
 
-from fastapi import Header, HTTPException
+from fastapi import (
+    Depends,
+    status,
+    HTTPException,
+)
+from fastapi.security import OAuth2PasswordBearer
+from jose import JWTError
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.jwt import jwt_decode
+from app.models import APIUserModel
+from app.services import user_service
+from database.session import get_session
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/sign_in")
 
 
-async def get_token_header(x_token: Annotated[str, Header()]) -> None:
+async def get_current_user(
+        token: Annotated[str, Depends(oauth2_scheme)],
+        session: Annotated[AsyncSession, Depends(get_session)]
+) -> APIUserModel:
     """
-    Временный примерный материал для создания зависимости обработки JWT-токена.
-    Если токен не совпадает, возвращается ошибка 400.
+    Dependency для проверки JWT.
 
-    :param x_token: Annotated[str, Header()], защитный токен
+    Получает на вход JSON Web Token, декодирует его и проверяет на наличие пользователя в базе данных.
+    Возвращает модель записи пользователя.
+
+    :param token: str, JSON Web Token
+    :param session: AsyncSession, объект сессии запроса
+    :return: User, модель записи пользователя
     """
-    if x_token != "fake-super-secret-token":
-        raise HTTPException(status_code=400, detail="X-Token header invalid")
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials.",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
 
+    try:
+        if (username := jwt_decode(token).get("sub")) is None:
+            raise credentials_exception
+    except JWTError:
+        raise credentials_exception
 
-async def get_query_token(token: str) -> None:
-    """
-    Временный примерный материал для создания зависимости обработки JWT-токена.
-    Если токен не совпадает, возвращается ошибка 400.
+    if (user := await user_service.get_user_by_username(session, username)) is None:
+        raise credentials_exception
 
-    :param token: str, защитный токен
-    """
-    if token != "jessica":
-        raise HTTPException(status_code=400, detail="No Jessica token provided")
+    return user

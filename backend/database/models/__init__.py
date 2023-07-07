@@ -9,4 +9,6 @@ vanyukov.alex@gmail.com
 
 __author__ = "Алексей Ванюков"
 
-from .base import BaseModel
+from .base import DBBaseModel
+from .base import DBJoinBaseModel
+from .user import DBUserModel

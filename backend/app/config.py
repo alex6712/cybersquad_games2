@@ -1,3 +1,5 @@
+from functools import lru_cache
+
 from pydantic import (
     BaseSettings,
     EmailStr,
@@ -30,6 +32,8 @@ class Settings(BaseSettings):
         адрес электронной почты для связи с ответственным
     DEV_MODE: bool
         режим разработки
+    INITIALIZE_DB: bool
+        пересоздать БД
     DOMAIN: str | IPvAnyAddress
         IP домена, на котором расположено приложение
     BACKEND_PORT: int
@@ -44,30 +48,41 @@ class Settings(BaseSettings):
         имя базы данных
     DATABASE_URL: PostgresDsn
         строка подключения (ссылка) к базе данных
+    JWT_SECRET_KEY: str
+        секретный ключ для кодирования JSON Web Token
+    JWT_ALGORITHM: str
+        алгоритм кодирования JWT
     """
-    APP_NAME: str = "CYBERSQUAD Games"
-    APP_VERSION: str = "2.0.0"
-    APP_DESCRIPTION: str = "API серверной части локальной игровой платформы от команды CYBERSQUAD."
+    APP_NAME: str
+    APP_VERSION: str
+    APP_DESCRIPTION: str
 
-    ADMIN_NAME: str = "Ванюков Алексей Игоревич"
-    ADMIN_EMAIL: EmailStr = "vanyukov.alex@gmail.com"
+    ADMIN_NAME: str
+    ADMIN_EMAIL: EmailStr
 
-    DEV_MODE: bool = True
+    DEV_MODE: bool
 
-    DOMAIN: str | IPvAnyAddress = "127.0.0.1"
+    INITIALIZE_DB: bool
 
-    BACKEND_PORT: int = 8080
+    DOMAIN: str | IPvAnyAddress
 
-    DATABASE_USER: str = "root"
-    DATABASE_PASSWORD: str = "toor"
-    DATABASE_PORT: int = 5432
-    DATABASE_NAME: str = "cybersquad_games"
+    BACKEND_PORT: int
 
-    DATABASE_URL: PostgresDsn = f"postgresql+asyncpg://{DATABASE_USER}:{DATABASE_PASSWORD}@{DOMAIN}:" \
-                                f"{DATABASE_PORT}/{DATABASE_NAME}"
+    DATABASE_USER: str
+    DATABASE_PASSWORD: str
+    DATABASE_PORT: int
+    DATABASE_NAME: str
+
+    DATABASE_URL: PostgresDsn
+
+    JWT_SECRET_KEY: str
+    JWT_ALGORITHM: str
 
     class Config:
+        env_file = '.env'
         case_sensitive = True
 
 
-settings = Settings()
+@lru_cache
+def get_settings() -> Settings:
+    return Settings()

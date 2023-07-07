@@ -77,12 +77,6 @@ class Suit(CommonEnum):
     HEARTS = "♥", "h", "hearts"
     SPADES = "♠", "s", "spades"
 
-    @classmethod
-    def get_all(cls) -> List["Suit"]: ...
-
-    @classmethod
-    def make_random(cls) -> "Suit": ...
-
 
 class Rank(CommonEnum):
     """
@@ -116,12 +110,6 @@ class Rank(CommonEnum):
         first, second = cls(first), cls(second)
         rank_list = list(cls)
         return abs(rank_list.index(first) - rank_list.index(second))
-
-    @classmethod
-    def get_all(cls) -> List["Rank"]: ...
-
-    @classmethod
-    def make_random(cls) -> "Rank": ...
 
 
 class _CardMeta(type):

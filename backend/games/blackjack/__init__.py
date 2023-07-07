@@ -4,3 +4,5 @@
 Алексей Ванюков
 vanyukov.alex@gmail.com
 """
+
+from .hand import Hand

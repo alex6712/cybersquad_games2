@@ -14,8 +14,3 @@ router = APIRouter(
     prefix="/blackjack",
     tags=["blackjack"],
 )
-
-
-@router.get("/join")
-def blackjack(user: Annotated[APIUserModel, Depends(get_current_user)]):
-    return {"hero": "gachi"}

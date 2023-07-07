@@ -9,8 +9,6 @@ from fastapi.responses import RedirectResponse
 from fastapi.exceptions import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app import get_settings
-from app.config import Settings
 from app.dependencies import get_current_user
 from app.models import APIUserModel
 from app.models.responses import UserResponse
@@ -41,7 +39,6 @@ async def person(
         username: str,
         user: Annotated[APIUserModel, Depends(get_current_user)],
         session: Annotated[AsyncSession, Depends(get_session)],
-        settings: Annotated[Settings, Depends(get_settings)],
 ):
     """
     Метод страницы пользователя.
@@ -52,11 +49,10 @@ async def person(
     :param username: str, логин пользователя, чья страница запрашивается
     :param user: APIUserModel, пользователь получен из зависимости на авторизацию
     :param session: AsyncSession, объект сессии запроса
-    :param settings: Settings, настройки приложения
     :return: APIUserModel, объект пользователя без пароля
     """
     if user.username == username:
-        return RedirectResponse(f"http://{settings.DOMAIN}:{settings.BACKEND_PORT}/users/me")
+        return RedirectResponse("/users/me")
 
     result = await user_service.get_user_by_username(session, username)
 

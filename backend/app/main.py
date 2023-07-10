@@ -9,21 +9,42 @@ from app.routers import (
     users_router,
 )
 
-origins = [
-    "http://localhost:3000",
-]
-
 settings = get_settings()
+
+tags_metadata = [
+    {
+        "name": "root",
+        "description": "Получение информации о **приложении**.",
+    },
+    {
+        "name": "authorization",
+        "description": "Операции **регистрации** и **аутентификации**.",
+    },
+    {
+        "name": "users",
+        "description": "Операции с **пользователями**. Получение _информации_ о них.",
+    },
+    {
+        "name": "blackjack",
+        "description": "API для работы с потоком игры **блек-джек**.",
+    },
+]
 
 cybersquad_games = FastAPI(
     title=settings.APP_NAME,
     version=settings.APP_VERSION,
     description=settings.APP_DESCRIPTION,
+    summary=settings.APP_SUMMARY,
     contact={
         "name": settings.ADMIN_NAME,
         "email": settings.ADMIN_EMAIL,
     },
+    openapi_tags=tags_metadata,
 )
+
+origins = [
+    "http://localhost:3000",
+]
 
 cybersquad_games.add_middleware(
     CORSMiddleware,

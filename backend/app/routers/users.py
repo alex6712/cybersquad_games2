@@ -7,9 +7,10 @@ from fastapi import (
 )
 from fastapi.responses import RedirectResponse
 from fastapi.exceptions import HTTPException
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.dependencies import get_current_user
+from app.dependencies import validate_access_token
 from app.models import APIUserModel
 from app.models.responses import UserResponse
 from app.services import user_service
@@ -22,7 +23,7 @@ router = APIRouter(
 
 
 @router.get("/me", status_code=status.HTTP_200_OK, response_model=UserResponse)
-async def me(user: Annotated[APIUserModel, Depends(get_current_user)]):
+async def me(user: Annotated[APIUserModel, Depends(validate_access_token)]):
     """
     Метод личной страницы пользователя.
 
@@ -37,7 +38,7 @@ async def me(user: Annotated[APIUserModel, Depends(get_current_user)]):
 @router.get("/{username}", response_model=UserResponse)
 async def person(
         username: str,
-        user: Annotated[APIUserModel, Depends(get_current_user)],
+        user: Annotated[APIUserModel, Depends(validate_access_token)],
         session: Annotated[AsyncSession, Depends(get_session)],
 ):
     """
@@ -55,6 +56,15 @@ async def person(
         return RedirectResponse("/users/me")
 
     result = await user_service.get_user_by_username(session, username)
+
+    try:
+        await session.commit()
+    except IntegrityError as _:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Could not validate credentials.",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
 
     if result is None:
         raise HTTPException(

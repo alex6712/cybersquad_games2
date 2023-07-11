@@ -8,7 +8,7 @@ from fastapi import (
 )
 
 from app.models import APIUserModel
-from app.dependencies import get_current_user
+from app.dependencies import validate_access_token
 
 router = APIRouter(
     prefix="/blackjack",
@@ -17,5 +17,5 @@ router = APIRouter(
 
 
 @router.get("/join")
-def blackjack(user: Annotated[APIUserModel, Depends(get_current_user)]):
+def blackjack(user: Annotated[APIUserModel, Depends(validate_access_token)]):
     pass

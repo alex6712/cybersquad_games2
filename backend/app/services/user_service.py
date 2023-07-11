@@ -1,5 +1,5 @@
 from passlib.context import CryptContext
-from sqlalchemy import select
+from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models import (
@@ -11,7 +11,7 @@ from database.models import DBUserModel
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
-async def get_user_by_username(session: AsyncSession, username: str) -> APIUserModel | None:
+async def get_user_by_username(session: AsyncSession, username: str) -> DBUserModel | None:
     """
     Возвращает модель записи пользователя для дальнейшей работы.
 
@@ -24,10 +24,46 @@ async def get_user_by_username(session: AsyncSession, username: str) -> APIUserM
     if not db_user:
         return None
 
-    return APIUserModel(username=db_user.username, email=db_user.email, phone=db_user.phone)
+    return db_user
 
 
-async def authenticate_user(session: AsyncSession, username: str, password: str) -> APIUserModel | None:
+async def get_refresh_token_by_username(session: AsyncSession, username: str) -> str | None:
+    """
+    Возвращает токен обновления пользователя по его имени.
+
+    :param session: AsyncSession, объект сессии запроса
+    :param username: str, логин пользователя, уникальное имя
+    :return: str | None, токен обновления пользователя
+    """
+    db_user: DBUserModel = await session.scalar(select(DBUserModel).where(DBUserModel.username == username))
+
+    if not db_user:
+        return None
+
+    return db_user.refresh_token
+
+
+async def update_refresh_token(session: AsyncSession, username: str, refresh_token: str) -> bool:
+    """
+    Перезаписывает токен обновления пользователя.
+
+    :param session: AsyncSession, объект сессии запроса
+    :param username: str, логин пользователя, уникальное имя
+    :param refresh_token: str, новый токен обновления
+    :return: bool, оповещение об успешном обновлении записи
+    """
+    if await session.execute(
+            update(DBUserModel)
+            .where(DBUserModel.username == username)
+            .values(refresh_token=refresh_token)
+            .returning(DBUserModel.id)
+    ) is None:
+        return False
+
+    return True
+
+
+async def authenticate_user(session: AsyncSession, username: str, password: str) -> DBUserModel | None:
     """
     Проводит аутентификацию пользователя.
 
@@ -45,7 +81,7 @@ async def authenticate_user(session: AsyncSession, username: str, password: str)
     if not pwd_context.verify(password, db_user.password):
         return None
 
-    return APIUserModel(username=db_user.username, email=db_user.email, phone=db_user.phone)
+    return db_user
 
 
 async def add_user(session: AsyncSession, user: APIUserWithPasswordModel) -> bool:

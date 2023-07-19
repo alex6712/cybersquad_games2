@@ -27,7 +27,7 @@ async def root():
 
     :return: StandardResponse, ответ о корректной работе сервера
     """
-    return {"status_code": status.HTTP_200_OK, "message": "API works!"}
+    return {"message": "API works!"}
 
 
 @router.get("/app_info", status_code=status.HTTP_200_OK, response_model=AppInfoResponse, tags=["root"])

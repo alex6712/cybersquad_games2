@@ -57,7 +57,7 @@ def create_jwt_pair(
     :param refresh_token_data: Dict, информация, которая будет закодирована в токен обновления
     :param at_expires_delta: timedelta, время жизни токена доступа
     :param rt_expires_delta: timedelta, время жизни токена обновления
-    :return: Dict[LiteralString, AnyStr], пара JWT
+    :return: Dict[AnyStr, AnyStr], пара JWT
     """
     if refresh_token_data is None:
         refresh_token_data = access_token_data

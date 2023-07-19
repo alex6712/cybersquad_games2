@@ -1,11 +1,10 @@
 from functools import lru_cache
 
 from pydantic import (
-    BaseSettings,
     EmailStr,
     IPvAnyAddress,
-    PostgresDsn,
 )
+from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
@@ -76,13 +75,13 @@ class Settings(BaseSettings):
     DATABASE_PORT: int
     DATABASE_NAME: str
 
-    DATABASE_URL: PostgresDsn
+    DATABASE_URL: str
 
     JWT_SECRET_KEY: str
     JWT_ALGORITHM: str
 
     class Config:
-        env_file = '.env'
+        env_file = ".env"
         case_sensitive = True
 
 

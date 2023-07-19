@@ -66,4 +66,4 @@ class Hand:
 
         :return: List[Rank], список достоинств
         """
-        return [k for k, v in self._ranks.items() if v >= 2]
+        return [rank for rank, amount in self._ranks.items() if amount >= 2]

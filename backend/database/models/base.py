@@ -1,6 +1,8 @@
-from sqlalchemy.orm import Mapped
-from sqlalchemy.orm import mapped_column
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import (
+    Mapped,
+    mapped_column,
+)
 
 Base = declarative_base()
 

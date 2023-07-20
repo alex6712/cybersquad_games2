@@ -1,5 +1,5 @@
 """
-Database Factory CRM Models
+Database CYDERSQUAD Games Models
 
 Модуль с описаниями моделей базы данных.
 

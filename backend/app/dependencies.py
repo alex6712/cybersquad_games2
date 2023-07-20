@@ -103,7 +103,7 @@ async def _get_user_from_token(token: AnyStr, session: AsyncSession) -> DBUserMo
 
     try:
         await session.commit()
-    except IntegrityError as _:
+    except IntegrityError:
         await session.rollback()
 
         raise credentials_exception

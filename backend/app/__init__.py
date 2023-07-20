@@ -1,5 +1,5 @@
 """
-Cybersquad Games
+CYBERSQUAD Games
 
 Source directory серверной части приложения.
 

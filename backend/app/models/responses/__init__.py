@@ -1,5 +1,5 @@
 """
-API response Factory CRM Models
+API response CYBERSQUAD Games Models
 
 Модуль с описаниями моделей ответов сервера.
 

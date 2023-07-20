@@ -34,7 +34,7 @@ async def update_refresh_token(session: AsyncSession, username: AnyStr, refresh_
     )
 
 
-async def add_user(session: AsyncSession, user: APIUserWithPasswordModel):
+def add_user(session: AsyncSession, user: APIUserWithPasswordModel):
     """
     Добавляет запись о пользователе в базу данных.
 

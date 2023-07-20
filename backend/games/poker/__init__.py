@@ -1,4 +1,6 @@
 """
+CYBERSQUAD Games poker
+
 Пакет с object-oriented покером.
 
 Алексей Ванюков

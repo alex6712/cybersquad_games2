@@ -1,7 +1,12 @@
 import itertools
 import random
 from enum import Enum, EnumMeta
-from typing import Iterable, List, Any
+from typing import (
+    Iterable,
+    List,
+    Any,
+    AnyStr,
+)
 
 
 class _CommonEnumMeta(EnumMeta):
@@ -11,6 +16,7 @@ class _CommonEnumMeta(EnumMeta):
     Нужен для того, чтобы установить соответствия между экземплярами Enum и любым из
     значений итерируемого объекта, а не с единственным.
     """
+
     def __init__(cls, class_name, bases, class_dict):
         super().__init__(class_name, bases, class_dict)
 
@@ -44,6 +50,7 @@ class CommonEnum(Enum, metaclass=_CommonEnumMeta):
     """
     Обобщённый базовый класс Enum.
     """
+
     def __str__(self):
         return str(self._value_[0])
 
@@ -118,12 +125,13 @@ class _CardMeta(type):
 
     Используется по большей части для кеширования всех возможных карт в атрибут _all_cards.
     """
+
     def __new__(metacls, class_name, bases, class_dict):
         """
         Кешируем все возможные комбинации достоинства и масти (= все возможные игральные карты) и
         сохраняем в атрибут класса _all_cards.
 
-        :param class_name: str, идентификатор класса
+        :param class_name: AnyStr, идентификатор класса
         :param bases: Iterable[object], базовые классы иерархии
         :param class_dict: dict[Any, Any], __dict__ класса
         :return Any, объект класса, создаваемого с помощью этого мета класса
@@ -151,7 +159,8 @@ class Card(metaclass=_CardMeta):
     suit: Suit
         масть карты
     """
-    def __init__(self, card: Iterable | str):
+
+    def __init__(self, card: Iterable | AnyStr):
         if len(card) != 2:
             raise ValueError(f"\"card\" argument must be iterable or string of length 2: {card!r}")
 

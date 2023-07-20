@@ -1,5 +1,5 @@
 """
-API DTO Factory CRM Models
+API DTO CYBERSQUAD Games Models
 
 Модуль с описаниями моделей объектов тела запросов.
 

@@ -47,8 +47,8 @@ def create_jwt(data: Dict, expires_delta: timedelta) -> AnyStr:
 def create_jwt_pair(
         access_token_data: Dict,
         refresh_token_data: Dict = None,
-        at_expires_delta: timedelta = timedelta(minutes=15),
-        rt_expires_delta: timedelta = timedelta(days=10),
+        at_expires_delta: timedelta = timedelta(minutes=settings.ACCESS_TOKEN_LIFETIME_MINUTES),
+        rt_expires_delta: timedelta = timedelta(days=settings.REFRESH_TOKEN_LIFETIME_DAYS),
 ) -> Dict[AnyStr, AnyStr]:
     """
     Создаёт пару JWT, состоящую из токена доступа и токена обновления.
@@ -62,7 +62,7 @@ def create_jwt_pair(
     if refresh_token_data is None:
         refresh_token_data = access_token_data
 
-    access_token = create_jwt(access_token_data, at_expires_delta)
-    refresh_token = create_jwt(refresh_token_data, rt_expires_delta)
-
-    return {"access_token": access_token, "refresh_token": refresh_token}
+    return {
+        "access_token": create_jwt(access_token_data, at_expires_delta),
+        "refresh_token": create_jwt(refresh_token_data, rt_expires_delta)
+    }

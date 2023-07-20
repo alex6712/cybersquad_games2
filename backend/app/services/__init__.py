@@ -1,5 +1,5 @@
 """
-Factory CRM API services
+CYBERSQUAD Games API services
 
 Модуль с описанием сервисов API.
 

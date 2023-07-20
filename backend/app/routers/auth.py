@@ -89,11 +89,11 @@ async def sign_up(user: APIUserWithPasswordModel, session: Annotated[AsyncSessio
 
     user.password = pwd_context.hash(user.password)
 
-    user_id = await user_service.add_user(session, user)
+    user_service.add_user(session, user)
 
     try:
         await session.commit()
-    except IntegrityError as _:
+    except IntegrityError:
         await session.rollback()
 
         raise HTTPException(
@@ -101,7 +101,7 @@ async def sign_up(user: APIUserWithPasswordModel, session: Annotated[AsyncSessio
             detail="Not enough information in request.",
         )
 
-    return {"code": status.HTTP_201_CREATED, "message": f"User with id={user_id} created successfully."}
+    return {"code": status.HTTP_201_CREATED, "message": f"User created successfully."}
 
 
 @router.get("/refresh", status_code=status.HTTP_200_OK, response_model=TokenResponse)
@@ -135,11 +135,11 @@ async def _get_jwt_pair(username: AnyStr, session: AsyncSession) -> Dict[AnyStr,
     """
     tokens = create_jwt_pair({"sub": username})
 
-    await user_service.update_refresh_token(session, username, tokens["refresh_token"])
+    _ = await user_service.update_refresh_token(session, username, tokens["refresh_token"])
 
     try:
         await session.commit()
-    except IntegrityError as _:
+    except IntegrityError:
         await session.rollback()
 
         raise HTTPException(

@@ -1,5 +1,5 @@
 """
-Factory CRM API routers
+CYBERSQUAD Games API routers
 
 Модуль с описанием роутеров API.
 

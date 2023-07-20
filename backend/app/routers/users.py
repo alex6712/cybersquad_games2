@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, AnyStr
 
 from fastapi import (
     APIRouter,
@@ -37,7 +37,7 @@ async def me(user: Annotated[APIUserModel, Depends(validate_access_token)]):
 
 @router.get("/{username}", response_model=UserResponse)
 async def person(
-        username: str,
+        username: AnyStr,
         user: Annotated[APIUserModel, Depends(validate_access_token)],
         session: Annotated[AsyncSession, Depends(get_session)],
 ):
@@ -47,7 +47,7 @@ async def person(
     Если владелец токена посылает запрос на этот метод, то возвращается redirect на личную страницу. В ином
     случае возвращается страница запрашиваемого пользователя.
 
-    :param username: str, логин пользователя, чья страница запрашивается
+    :param username: AnyStr, логин пользователя, чья страница запрашивается
     :param user: APIUserModel, пользователь получен из зависимости на авторизацию
     :param session: AsyncSession, объект сессии запроса
     :return: APIUserModel, объект пользователя без пароля
@@ -56,8 +56,6 @@ async def person(
         return RedirectResponse("/users/me")
 
     if (result := await user_service.get_user_by_username(session, username)) is None:
-        await session.rollback()
-
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"User \"{username}\" not found.",
@@ -65,7 +63,7 @@ async def person(
 
     try:
         await session.commit()
-    except IntegrityError as _:
+    except IntegrityError:
         await session.rollback()
 
         raise HTTPException(

@@ -1,5 +1,5 @@
 """
-Database Factory CRM
+Database CYBERSQUAD Games
 
 Модуль для работы с базой данных.
 

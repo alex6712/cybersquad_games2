@@ -1,4 +1,6 @@
 """
+CYBERSQUAD Games
+
 Пакет с object-oriented играми.
 
 Алексей Ванюков

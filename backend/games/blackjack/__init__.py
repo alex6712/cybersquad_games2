@@ -1,4 +1,6 @@
 """
+CYBERSQUAD Games blackjack
+
 Пакет с object-oriented блек-джеком.
 
 Алексей Ванюков

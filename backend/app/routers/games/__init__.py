@@ -1,5 +1,5 @@
 """
-Factory CRM API games routers
+CYBERSQUAD Games API games routers
 
 Модуль с описанием роутеров игр.
 
@@ -31,7 +31,7 @@ router = APIRouter(
 router.include_router(_blackjack_router)
 
 
-@router.post("/create", status_code=status.HTTP_201_CREATED, response_model=StandardResponse, tags=["games"])
+@router.post("/room", status_code=status.HTTP_201_CREATED, response_model=StandardResponse, tags=["games"])
 def create_room(user: Annotated[APIUserModel, Depends(validate_access_token)]):
     """
     Метод создания комнаты.
@@ -46,7 +46,7 @@ def create_room(user: Annotated[APIUserModel, Depends(validate_access_token)]):
     return {"code": status.HTTP_201_CREATED, "message": f"Room created by {user.username} successfully."}
 
 
-@router.post("/delete", status_code=status.HTTP_200_OK, response_model=StandardResponse, tags=["games"])
+@router.delete("/room", status_code=status.HTTP_200_OK, response_model=StandardResponse, tags=["games"])
 def delete_room(user: Annotated[APIUserModel, Depends(validate_access_token)]):
     """
     Метод удаления комнаты.

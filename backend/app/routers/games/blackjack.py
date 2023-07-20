@@ -16,6 +16,6 @@ router = APIRouter(
 )
 
 
-@router.post("/join", status_code=status.HTTP_200_OK, response_model=StandardResponse)
+@router.get("/state", status_code=status.HTTP_200_OK, response_model=StandardResponse)
 def blackjack(user: Annotated[APIUserModel, Depends(validate_access_token)]):
-    return {"message": f"User {user.username} successfully joined room."}
+    return {"message": f"There's current game state for {user.username}."}

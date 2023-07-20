@@ -12,8 +12,3 @@ vanyukov.alex@gmail.com
 """
 
 __author__ = "Алексей Ванюков"
-
-from .session import (
-    get_session,
-    AsyncSessionMaker,
-)

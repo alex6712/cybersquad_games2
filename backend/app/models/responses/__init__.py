@@ -7,6 +7,8 @@ API response Factory CRM Models
 vanyukov.alex@gmail.com
 """
 
+__author__ = "Алексей Ванюков"
+
 from .standard import StandardResponse
 from .info import AppInfoResponse
 from .jwt import TokenResponse

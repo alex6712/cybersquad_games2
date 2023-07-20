@@ -11,4 +11,6 @@
 vanyukov.alex@gmail.com
 """
 
+__author__ = "Алексей Ванюков"
+
 from .card import Suit, Rank, Card

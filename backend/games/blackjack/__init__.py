@@ -5,4 +5,6 @@
 vanyukov.alex@gmail.com
 """
 
+__author__ = "Алексей Ванюков"
+
 from .hand import Hand

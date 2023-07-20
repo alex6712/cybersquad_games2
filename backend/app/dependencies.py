@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, AnyStr
 
 from fastapi import (
     Depends,
@@ -11,13 +11,14 @@ from fastapi.security import (
     HTTPAuthorizationCredentials,
     HTTPBearer,
 )
-from jose import JWTError
+from jose import JWTError, ExpiredSignatureError
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.jwt import jwt_decode
 from app.models import APIUserModel
 from app.services import user_service
+from database.models import DBUserModel
 from database.session import get_session
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/sign_in")
@@ -30,7 +31,7 @@ credentials_exception = HTTPException(
 
 
 async def validate_access_token(
-        token: Annotated[str, Depends(oauth2_scheme)],
+        token: Annotated[AnyStr, Depends(oauth2_scheme)],
         session: Annotated[AsyncSession, Depends(get_session)],
 ) -> APIUserModel:
     """
@@ -39,32 +40,18 @@ async def validate_access_token(
     Получает на вход JSON Web Token, декодирует его и проверяет на наличие пользователя в базе данных.
     Возвращает модель записи пользователя.
 
-    :param token: str, JSON Web Token
+    :param token: AnyStr, JSON Web Token
     :param session: AsyncSession, объект сессии запроса
     :return: APIUserModel, модель записи пользователя
     """
-    global credentials_exception
-
-    try:
-        if (username := jwt_decode(token).get("sub")) is None:
-            raise credentials_exception
-    except JWTError:
-        raise credentials_exception
-
-    if (user := await user_service.get_user_by_username(session, username)) is None:
-        raise credentials_exception
-
-    try:
-        await session.commit()
-    except IntegrityError as _:
-        raise credentials_exception
+    user = await _get_user_from_token(token, session)
 
     return APIUserModel(username=user.username, email=user.email, phone=user.phone)
 
 
 async def validate_refresh_token(
         credentials: Annotated[HTTPAuthorizationCredentials, Security(HTTPBearer())],
-        session: Annotated[AsyncSession, Depends(get_session)]
+        session: Annotated[AsyncSession, Depends(get_session)],
 ) -> APIUserModel:
     """
     Dependency автоматической аутентификации.
@@ -78,20 +65,47 @@ async def validate_refresh_token(
     """
     global credentials_exception
 
-    refresh_token = credentials.credentials
+    user = await _get_user_from_token(refresh_token := credentials.credentials, session)
+
+    if user.refresh_token != refresh_token:
+        raise credentials_exception
+
+    return APIUserModel(username=user.username, email=user.email, phone=user.phone)
+
+
+async def _get_user_from_token(token: AnyStr, session: AsyncSession) -> DBUserModel:
+    """
+    Функция получения записи пользователя из базы данных по data из JWT.
+
+    Получает на вход JSON Web Token, декодирует его и проверяет на наличие пользователя в базе данных.
+    Возвращает модель записи пользователя из базы данных.
+
+    :param token: AnyStr, JSON Web Token
+    :param session: AsyncSession, объект сессии запроса
+    :return: DBUserModel, модель записи пользователя из базы данных
+    """
+    global credentials_exception
 
     try:
-        if (username := jwt_decode(refresh_token).get("sub")) is None:
+        if (username := jwt_decode(token).get("sub")) is None:
             raise credentials_exception
+    except ExpiredSignatureError:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Signature has expired.",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
     except JWTError:
         raise credentials_exception
 
-    if (user := await user_service.get_user_by_username(session, username)).refresh_token != refresh_token:
+    if (user := await user_service.get_user_by_username(session, username)) is None:
         raise credentials_exception
 
     try:
         await session.commit()
     except IntegrityError as _:
+        await session.rollback()
+
         raise credentials_exception
 
-    return APIUserModel(username=user.username, email=user.email, phone=user.phone)
+    return user

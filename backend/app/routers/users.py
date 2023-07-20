@@ -55,21 +55,23 @@ async def person(
     if user.username == username:
         return RedirectResponse("/users/me")
 
-    result = await user_service.get_user_by_username(session, username)
+    if (result := await user_service.get_user_by_username(session, username)) is None:
+        await session.rollback()
+
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"User \"{username}\" not found.",
+        )
 
     try:
         await session.commit()
     except IntegrityError as _:
+        await session.rollback()
+
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Could not validate credentials.",
             headers={"WWW-Authenticate": "Bearer"},
-        )
-
-    if result is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"User '{username}' not found.",
         )
 
     return result

@@ -1,4 +1,8 @@
-from typing import Annotated
+from typing import (
+    Annotated,
+    Dict,
+    AnyStr,
+)
 
 from fastapi import (
     APIRouter,
@@ -7,6 +11,7 @@ from fastapi import (
     HTTPException,
 )
 from fastapi.security import OAuth2PasswordRequestForm
+from passlib.context import CryptContext
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -21,6 +26,8 @@ router = APIRouter(
     prefix="/auth",
     tags=["authorization"],
 )
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 @router.post("/sign_in", status_code=status.HTTP_200_OK, response_model=TokenResponse)
@@ -38,33 +45,27 @@ async def sign_in(
     :param session: AsyncSession, объект сессии запроса
     :return: APIJSONWebTokenModel, модель ответа с вложенной парой JWT
     """
-    user = await user_service.authenticate_user(session, form_data.username, form_data.password)
+    user = await user_service.get_user_by_username(session, form_data.username)
 
     if not user:
+        await session.rollback()
+
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect username or password.",
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    tokens = create_jwt_pair({"sub": form_data.username})
+    if not pwd_context.verify(form_data.password, user.password):
+        await session.rollback()
 
-    if not await user_service.update_refresh_token(session, user.username, tokens["refresh_token"]):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect username or password.",
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    try:
-        await session.commit()
-    except IntegrityError as _:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Incorrect request.",
-        )
-
-    return {**tokens, "token_type": "bearer"}
+    return {**await _get_jwt_pair(user.username, session), "token_type": "bearer"}
 
 
 @router.post("/sign_up", status_code=status.HTTP_201_CREATED, response_model=StandardResponse)
@@ -78,11 +79,17 @@ async def sign_up(user: APIUserWithPasswordModel, session: Annotated[AsyncSessio
     :param session: AsyncSession, объект сессии запроса
     :return: StandardResponse, положительная обратная связь о регистрации пользователя
     """
-    if not await user_service.add_user(session, user):
+    if await user_service.get_user_by_username(session, user.username):
+        await session.rollback()
+
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail="User already exists.",
         )
+
+    user.password = pwd_context.hash(user.password)
+
+    user_id = await user_service.add_user(session, user)
 
     try:
         await session.commit()
@@ -94,7 +101,7 @@ async def sign_up(user: APIUserWithPasswordModel, session: Annotated[AsyncSessio
             detail="Not enough information in request.",
         )
 
-    return {"code": status.HTTP_201_CREATED, "message": "User created successfully."}
+    return {"code": status.HTTP_201_CREATED, "message": f"User with id={user_id} created successfully."}
 
 
 @router.get("/refresh", status_code=status.HTTP_200_OK, response_model=TokenResponse)
@@ -112,21 +119,32 @@ async def refresh(
     :param session: AsyncSession, объект сессии запроса
     :return: APIJSONWebTokenModel, модель ответа с вложенной парой JWT
     """
-    tokens = create_jwt_pair({"sub": user.username})
+    return {**await _get_jwt_pair(user.username, session), "token_type": "bearer"}
 
-    if not await user_service.update_refresh_token(session, user.username, tokens["refresh_token"]):
-        raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Could not validate credentials.",
-                headers={"WWW-Authenticate": "Bearer"},
-            )
+
+async def _get_jwt_pair(username: AnyStr, session: AsyncSession) -> Dict[AnyStr, AnyStr]:
+    """
+    Функция создания новой пары JWT.
+
+    Создаёт пару access_token и refresh_token, перезаписывает токен обновления пользователя
+    в базе данных и возвращает пару JWT.
+
+    :param username: AnyStr, имя пользователя
+    :param session: AsyncSession, объект сессии запроса
+    :return: Dict[AnyStr, AnyStr], пара JWT
+    """
+    tokens = create_jwt_pair({"sub": username})
+
+    await user_service.update_refresh_token(session, username, tokens["refresh_token"])
 
     try:
         await session.commit()
     except IntegrityError as _:
+        await session.rollback()
+
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Incorrect request.",
         )
 
-    return {**tokens, "token_type": "bearer"}
+    return tokens

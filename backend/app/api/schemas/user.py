@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field, EmailStr
 
 
-class APIUserModel(BaseModel):
+class UserSchema(BaseModel):
     """
     Модель объекта пользователя.
 
@@ -23,7 +23,7 @@ class APIUserModel(BaseModel):
     phone: str = Field(default=None, example="+7 900 000-00-00")
 
 
-class APIUserWithPasswordModel(APIUserModel):
+class UserWithPasswordSchema(UserSchema):
     """
     Модель объекта пользователя с паролем.
 

@@ -1,8 +1,11 @@
 from functools import lru_cache
+from typing import List
 
 from pydantic import (
     EmailStr,
     IPvAnyAddress,
+    AnyHttpUrl,
+    field_validator,
 )
 from pydantic_settings import BaseSettings
 
@@ -35,6 +38,8 @@ class Settings(BaseSettings):
         режим разработки
     INITIALIZE_DB: bool
         пересоздать БД
+    BACKEND_CORS_ORIGINS: List[AnyHttpUrl]
+        список источников для CORS Middleware
     DOMAIN: str | IPvAnyAddress
         IP домена, на котором расположено приложение
     BACKEND_PORT: int
@@ -53,6 +58,10 @@ class Settings(BaseSettings):
         секретный ключ для кодирования JSON Web Token
     JWT_ALGORITHM: str
         алгоритм кодирования JWT
+    ACCESS_TOKEN_LIFETIME_MINUTES: int
+        срок жизни токена доступа в минутах
+    REFRESH_TOKEN_LIFETIME_DAYS: int
+        срок жизни токена обновления в днях
     """
     APP_NAME: str
     APP_VERSION: str
@@ -65,6 +74,19 @@ class Settings(BaseSettings):
     DEV_MODE: bool
 
     INITIALIZE_DB: bool
+
+    BACKEND_CORS_ORIGINS: List[AnyHttpUrl]
+
+    @classmethod
+    @field_validator("BACKEND_CORS_ORIGINS", mode="before")
+    def assemble_cors_origins(cls, v: List[str] | str) -> List[str] | str:
+        if isinstance(v, str) and not v.startswith("["):
+            return [i.strip() for i in v.split(",")]
+
+        elif isinstance(v, (list, str)):
+            return v
+
+        raise ValueError(v)
 
     DOMAIN: str | IPvAnyAddress
 

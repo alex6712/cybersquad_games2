@@ -15,10 +15,10 @@ from jose import JWTError, ExpiredSignatureError
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.jwt import jwt_decode
-from app.models import APIUserModel
-from app.services import user_service
-from database.models import DBUserModel
+from api.jwt import jwt_decode
+from api.schemas import UserSchema
+from api.services import user_service
+from database.models import UserModel
 from database.session import get_session
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/sign_in")
@@ -33,7 +33,7 @@ credentials_exception = HTTPException(
 async def validate_access_token(
         token: Annotated[AnyStr, Depends(oauth2_scheme)],
         session: Annotated[AsyncSession, Depends(get_session)],
-) -> APIUserModel:
+) -> UserSchema:
     """
     Dependency авторизации.
 
@@ -46,13 +46,13 @@ async def validate_access_token(
     """
     user = await _get_user_from_token(token, session)
 
-    return APIUserModel(username=user.username, email=user.email, phone=user.phone)
+    return UserSchema(username=user.username, email=user.email, phone=user.phone)
 
 
 async def validate_refresh_token(
         credentials: Annotated[HTTPAuthorizationCredentials, Security(HTTPBearer())],
         session: Annotated[AsyncSession, Depends(get_session)],
-) -> APIUserModel:
+) -> UserSchema:
     """
     Dependency автоматической аутентификации.
 
@@ -70,10 +70,10 @@ async def validate_refresh_token(
     if user.refresh_token != refresh_token:
         raise credentials_exception
 
-    return APIUserModel(username=user.username, email=user.email, phone=user.phone)
+    return UserSchema(username=user.username, email=user.email, phone=user.phone)
 
 
-async def _get_user_from_token(token: AnyStr, session: AsyncSession) -> DBUserModel:
+async def _get_user_from_token(token: AnyStr, session: AsyncSession) -> UserModel:
     """
     Функция получения записи пользователя из базы данных по data из JWT.
 

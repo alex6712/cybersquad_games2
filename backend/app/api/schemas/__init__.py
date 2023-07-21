@@ -9,5 +9,5 @@ vanyukov.alex@gmail.com
 
 __author__ = "Алексей Ванюков"
 
-from .user import APIUserModel
-from .user import APIUserWithPasswordModel
+from .user import UserSchema
+from .user import UserWithPasswordSchema

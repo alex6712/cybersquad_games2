@@ -20,9 +20,9 @@ from fastapi import (
     status,
 )
 
-from app.dependencies import validate_access_token
-from app.models import APIUserModel
-from app.models.responses import StandardResponse
+from api.dependencies import validate_access_token
+from api.schemas import UserSchema
+from api.schemas.responses import StandardResponse
 from .blackjack import router as _blackjack_router
 
 router = APIRouter(
@@ -32,7 +32,7 @@ router.include_router(_blackjack_router)
 
 
 @router.post("/room", status_code=status.HTTP_201_CREATED, response_model=StandardResponse, tags=["games"])
-def create_room(user: Annotated[APIUserModel, Depends(validate_access_token)]):
+def create_room(user: Annotated[UserSchema, Depends(validate_access_token)]):
     """
     Метод создания комнаты.
 
@@ -47,7 +47,7 @@ def create_room(user: Annotated[APIUserModel, Depends(validate_access_token)]):
 
 
 @router.delete("/room", status_code=status.HTTP_200_OK, response_model=StandardResponse, tags=["games"])
-def delete_room(user: Annotated[APIUserModel, Depends(validate_access_token)]):
+def delete_room(user: Annotated[UserSchema, Depends(validate_access_token)]):
     """
     Метод удаления комнаты.
 
@@ -60,7 +60,7 @@ def delete_room(user: Annotated[APIUserModel, Depends(validate_access_token)]):
 
 
 @router.post("/join", status_code=status.HTTP_200_OK, response_model=StandardResponse, tags=["games"])
-def join_room(user: Annotated[APIUserModel, Depends(validate_access_token)]):
+def join_room(user: Annotated[UserSchema, Depends(validate_access_token)]):
     """
     Метод присоединения пользователя к комнате.
 

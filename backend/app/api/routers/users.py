@@ -10,10 +10,10 @@ from fastapi.exceptions import HTTPException
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.dependencies import validate_access_token
-from app.models import APIUserModel
-from app.models.responses import UserResponse
-from app.services import user_service
+from api.dependencies import validate_access_token
+from api.schemas import UserSchema
+from api.schemas.responses import UserResponse
+from api.services import user_service
 from database.session import get_session
 
 router = APIRouter(
@@ -23,7 +23,7 @@ router = APIRouter(
 
 
 @router.get("/me", status_code=status.HTTP_200_OK, response_model=UserResponse)
-async def me(user: Annotated[APIUserModel, Depends(validate_access_token)]):
+async def me(user: Annotated[UserSchema, Depends(validate_access_token)]):
     """
     Метод личной страницы пользователя.
 
@@ -38,7 +38,7 @@ async def me(user: Annotated[APIUserModel, Depends(validate_access_token)]):
 @router.get("/{username}", response_model=UserResponse)
 async def person(
         username: AnyStr,
-        user: Annotated[APIUserModel, Depends(validate_access_token)],
+        user: Annotated[UserSchema, Depends(validate_access_token)],
         session: Annotated[AsyncSession, Depends(get_session)],
 ):
     """

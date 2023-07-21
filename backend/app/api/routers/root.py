@@ -8,7 +8,7 @@ from fastapi import (
 
 from app import get_settings
 from app.config import Settings
-from app.models.responses import (
+from api.schemas.responses import (
     StandardResponse,
     AppInfoResponse,
 )

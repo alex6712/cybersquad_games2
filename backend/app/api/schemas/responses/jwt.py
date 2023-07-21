@@ -1,6 +1,6 @@
 from pydantic import Field
 
-from app.models.responses import StandardResponse
+from api.schemas.responses import StandardResponse
 
 
 class TokenResponse(StandardResponse):

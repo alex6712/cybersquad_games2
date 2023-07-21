@@ -4,10 +4,10 @@ from sqlalchemy.orm import (
     mapped_column,
 )
 
-from database.models import DBBaseModel
+from database.models import BaseModel
 
 
-class DBUserModel(DBBaseModel):
+class UserModel(BaseModel):
     __tablename__ = "user"
 
     username: Mapped[str] = mapped_column(String(256), nullable=False)

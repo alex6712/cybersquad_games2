@@ -3,8 +3,6 @@ CYBERSQUAD Games
 
 Source directory серверной части приложения.
 
-Здесь присутствуют файлы API серверной части приложения.
-
 Используются инструменты:
     FastAPI
     SQLAlchemy
@@ -18,6 +16,6 @@ vanyukov.alex@gmail.com
 
 __author__ = "Алексей Ванюков"
 
-from .config import get_settings
+from config import get_settings
 
 __version__ = get_settings().APP_VERSION

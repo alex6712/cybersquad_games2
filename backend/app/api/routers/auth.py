@@ -15,11 +15,11 @@ from passlib.context import CryptContext
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.dependencies import validate_refresh_token
-from app.jwt import create_jwt_pair
-from app.models import APIUserModel, APIUserWithPasswordModel
-from app.models.responses import StandardResponse, TokenResponse
-from app.services import user_service
+from api.dependencies import validate_refresh_token
+from api.jwt import create_jwt_pair
+from api.schemas import UserSchema, UserWithPasswordSchema
+from api.schemas.responses import StandardResponse, TokenResponse
+from api.services import user_service
 from database.session import get_session
 
 router = APIRouter(
@@ -69,7 +69,7 @@ async def sign_in(
 
 
 @router.post("/sign_up", status_code=status.HTTP_201_CREATED, response_model=StandardResponse)
-async def sign_up(user: APIUserWithPasswordModel, session: Annotated[AsyncSession, Depends(get_session)]):
+async def sign_up(user: UserWithPasswordSchema, session: Annotated[AsyncSession, Depends(get_session)]):
     """
     Метод регистрации.
 
@@ -106,7 +106,7 @@ async def sign_up(user: APIUserWithPasswordModel, session: Annotated[AsyncSessio
 
 @router.get("/refresh", status_code=status.HTTP_200_OK, response_model=TokenResponse)
 async def refresh(
-        user: Annotated[APIUserModel, Depends(validate_refresh_token)],
+        user: Annotated[UserSchema, Depends(validate_refresh_token)],
         session: Annotated[AsyncSession, Depends(get_session)],
 ):
     """
@@ -135,7 +135,7 @@ async def _get_jwt_pair(username: AnyStr, session: AsyncSession) -> Dict[AnyStr,
     """
     tokens = create_jwt_pair({"sub": username})
 
-    _ = await user_service.update_refresh_token(session, username, tokens["refresh_token"])
+    await user_service.update_refresh_token(session, username, tokens["refresh_token"])
 
     try:
         await session.commit()

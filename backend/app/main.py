@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app import get_settings
-from app.routers import (
+from api.routers import (
     auth_router,
     games_router,
     root_router,
@@ -46,13 +46,9 @@ cybersquad_games = FastAPI(
     openapi_tags=tags_metadata,
 )
 
-origins = [
-    "http://localhost:3000",
-]
-
 cybersquad_games.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=settings.BACKEND_CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

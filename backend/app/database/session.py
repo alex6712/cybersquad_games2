@@ -16,12 +16,14 @@ AsyncSessionMaker: async_sessionmaker = async_sessionmaker(bind=engine, class_=A
 
 
 async def get_session() -> AsyncSession:
-    """
-    Создаёт объект асинхронной сесии уникального запроса.
+    """Создаёт объект асинхронной сесии уникального запроса.
 
     Используется для добавления сессии БД в маршрут запроса с помощью системы зависимостей FastAPI.
 
-    :return: AsyncSession, объект асинхронной сессии для уникального запроса
+    Returns
+    -------
+    session : `AsyncSession`
+        Объект асинхронной сессии для уникального запроса
     """
     async with AsyncSessionMaker() as session:
         yield session

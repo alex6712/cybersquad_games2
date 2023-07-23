@@ -11,57 +11,62 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    """
-    Config класс проекта.
+    """Config класс проекта.
 
-    Используется pydantic + python-dotenv для поиска настроек приложения, описанных в .env.
+    Используется `pydantic`_ + `python-dotenv`_ для поиска настроек приложения, описанных в .env.
 
-    .. seealso::
+    .. _`pydantic`:
+        https://docs.pydantic.dev/
+    .. _`python-dotenv`:
+        https://pypi.org/project/python-dotenv/
 
-        :ref:`python-dotenv` - https://pypi.org/project/python-dotenv/
+    See also
+    --------
+    pydantic
+    python-dotenv
 
     Attributes
     ----------
-    APP_NAME: str
-        наименование приложения
-    APP_VERSION: str
-        текущая версия приложения
-    APP_DESCRIPTION: str
-        описание приложения
-    APP_SUMMARY: str
-        краткое описание приложения
-    ADMIN_NAME: str
+    APP_NAME : `str`
+        Наименование приложения
+    APP_VERSION : `str`
+        Текущая версия приложения
+    APP_DESCRIPTION : `str`
+        Полное описание приложения
+    APP_SUMMARY : `str`
+        Краткое описание приложения
+    ADMIN_NAME : `str`
         ФИО ответственного
-    ADMIN_EMAIL: EmailStr
-        адрес электронной почты для связи с ответственным
-    DEV_MODE: bool
-        режим разработки
-    INITIALIZE_DB: bool
-        пересоздать БД
-    BACKEND_CORS_ORIGINS: List[AnyHttpUrl]
-        список источников для CORS Middleware
-    DOMAIN: str | IPvAnyAddress
+    ADMIN_EMAIL : `EmailStr`
+        Адрес электронной почты для связи с ответственным
+    DEV_MODE : `bool`
+        Режим разработки
+    INITIALIZE_DB : `bool`
+        Пересоздать БД
+    BACKEND_CORS_ORIGINS : `List[AnyHttpUrl]`
+        Список источников для CORS Middleware
+    DOMAIN : `str` | `IPvAnyAddress`
         IP домена, на котором расположено приложение
-    BACKEND_PORT: int
-        порт приложения
-    DATABASE_USER: str
-        пользователь базы данных для подключения
-    DATABASE_PASSWORD: str
-        пароль пользователя для подключения к базе данных
-    DATABASE_PORT: int
-        порт базы данных
-    DATABASE_NAME: str
-        имя базы данных
-    DATABASE_URL: PostgresDsn
-        строка подключения (ссылка) к базе данных
-    JWT_SECRET_KEY: str
-        секретный ключ для кодирования JSON Web Token
-    JWT_ALGORITHM: str
-        алгоритм кодирования JWT
-    ACCESS_TOKEN_LIFETIME_MINUTES: int
-        срок жизни токена доступа в минутах
-    REFRESH_TOKEN_LIFETIME_DAYS: int
-        срок жизни токена обновления в днях
+    BACKEND_PORT : `int`
+        Порт приложения
+    DATABASE_USER : `str`
+        Пользователь базы данных для подключения
+    DATABASE_PASSWORD : `str`
+        Пароль пользователя для подключения к базе данных
+    DATABASE_PORT : `int`
+        Порт базы данных
+    DATABASE_NAME : `str`
+        Имя базы данных
+    DATABASE_URL : `PostgresDsn`
+        Строка подключения (ссылка) к базе данных
+    JWT_SECRET_KEY : `str`
+        Секретный ключ для кодирования JSON Web Token
+    JWT_ALGORITHM : `str`
+        Алгоритм кодирования JWT
+    ACCESS_TOKEN_LIFETIME_MINUTES : `int`
+        Срок жизни токена доступа в минутах
+    REFRESH_TOKEN_LIFETIME_DAYS : `int`
+        Срок жизни токена обновления в днях
     """
     APP_NAME: str
     APP_VERSION: str

@@ -1,5 +1,4 @@
-"""
-CYBERSQUAD Games
+"""CYBERSQUAD Games
 
 Source directory серверной части приложения.
 
@@ -10,8 +9,9 @@ Source directory серверной части приложения.
     uvicorn
     asyncpg
 
-Алексей Ванюков
-vanyukov.alex@gmail.com
+Приложение создано командой CYBERSQUAD Games.
+Лицензия отсутствует.
+Приятной игры!
 """
 
 __author__ = "Алексей Ванюков"

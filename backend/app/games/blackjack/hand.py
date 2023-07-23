@@ -1,19 +1,18 @@
 from typing import List, Dict
 from collections import defaultdict
 
-from games.common import Card, Rank, Suit
+from app.games.common import Card, Rank, Suit
 
 
 class Hand:
-    """
-    Класс руки для блек-джека.
+    """Класс руки для блек-джека.
 
     Хранит карты отдельной руки игрока.
 
     Attributes
     ----------
-    cards: List[Card]
-        список всех карт в руке
+    cards : `List[Card]`
+        Список всех карт в руке
     """
     def __init__(self, *cards: Card):
         self.cards: List[Card] = list()
@@ -33,37 +32,48 @@ class Hand:
         return iter(self.cards)
 
     def _update(self, card: Card):
-        """
-        Обновляет словари :attr:`ranks` и :attr:`suits` при добавлении новой карты
-        в руку.
+        """Обновляет словари ``ranks`` и ``suits`` при добавлении новой карты в руку.
 
-        :param card: Card, добавленная карта
+        Parameters
+        ----------
+        card : `Card`
+            Добавленная карта
         """
         self._ranks[card.rank] += 1
         self._suits[card.suit] += 1
 
     def append(self, card: Card):
-        """
-        Добавляет новую карту в руку.
+        """Добавляет новую карту в руку.
 
-        :param card: Card, добавляемая карта
+        Parameters
+        ----------
+        card : `Card`
+            Добавляемая карта
         """
         self.cards.append(card)
         self._update(card)
 
     def extend(self, *cards: Card):
-        """
-        Добавляет в конец списка все переданные карты через метод :method:`append`.
+        """Добавляет в конец списка все переданные карты через метод ``append``.
 
-        :param cards: ...Card, добавляемая карта
+        Note
+        ----
+        Все элементы ``*cards`` (т.е. все переданные аргументы) должны быть типа `Card`.
+
+        Parameters
+        ----------
+        cards
+            Произвольное количество карт
         """
         for card in cards:
             self.append(card)
 
     def get_pairs(self) -> List[Rank]:
-        """
-        Возвращает список достоинств тех карт, которые в руке образуют по крайней мере пару.
+        """Возвращает список достоинств тех карт, которые в руке образуют по крайней мере пару.
 
-        :return: List[Rank], список достоинств
+        Returns
+        -------
+        ranks : `List[Rank]`
+            Список достоинств всех карт, образующих по крайней мере пару
         """
         return [rank for rank, amount in self._ranks.items() if amount >= 2]

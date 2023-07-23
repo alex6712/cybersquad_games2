@@ -1,10 +1,6 @@
-"""
-CYBERSQUAD Games
+"""CYBERSQUAD Games
 
-Пакет с object-oriented играми.
-
-Алексей Ванюков
-vanyukov.alex@gmail.com
+Пакет с object-oriented покером.
 """
 
 __author__ = "Алексей Ванюков"

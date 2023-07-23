@@ -1,11 +1,15 @@
-from api.schemas import UserSchema
-from api.schemas.responses import StandardResponse
+from app.api.schemas import UserSchema
+from .standard import StandardResponse
 
 
 class UserResponse(StandardResponse, UserSchema):
-    """
-    Модель ответа с данными о пользователе.
+    """Модель ответа с данными о пользователе.
 
     Используется в качестве ответа от сервера на запрос о пользователе.
+
+    See also
+    --------
+    responses.standard.StandardResponse
+    responses.user.UserSchema
     """
     pass

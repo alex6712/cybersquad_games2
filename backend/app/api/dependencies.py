@@ -15,11 +15,11 @@ from jose import JWTError, ExpiredSignatureError
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from api.jwt import jwt_decode
-from api.schemas import UserSchema
-from api.services import user_service
-from database.models import UserModel
-from database.session import get_session
+from app.api.jwt import jwt_decode
+from app.api.schemas import UserSchema
+from app.api.services import user_service
+from app.database.models import UserModel
+from app.database.session import get_session
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/sign_in")
 
@@ -34,15 +34,22 @@ async def validate_access_token(
         token: Annotated[AnyStr, Depends(oauth2_scheme)],
         session: Annotated[AsyncSession, Depends(get_session)],
 ) -> UserSchema:
-    """
-    Dependency авторизации.
+    """Dependency авторизации.
 
     Получает на вход JSON Web Token, декодирует его и проверяет на наличие пользователя в базе данных.
     Возвращает модель записи пользователя.
 
-    :param token: AnyStr, JSON Web Token
-    :param session: AsyncSession, объект сессии запроса
-    :return: APIUserModel, модель записи пользователя
+    Parameters
+    ----------
+    token : `AnyStr`
+        JSON Web Token, токен доступа
+    session : `AsyncSession`
+        Объект сессии запроса
+
+    Returns
+    -------
+    user : `UserSchema`
+        Схема данных пользователя
     """
     user = await _get_user_from_token(token, session)
 
@@ -53,15 +60,22 @@ async def validate_refresh_token(
         credentials: Annotated[HTTPAuthorizationCredentials, Security(HTTPBearer())],
         session: Annotated[AsyncSession, Depends(get_session)],
 ) -> UserSchema:
-    """
-    Dependency автоматической аутентификации.
+    """Dependency автоматической аутентификации.
 
     В заголовке запросе получает refresh_token пользователя, декодирует его,
     проверяет на соответствие в базе данных.
 
-    :param credentials: HTTPAuthorizationCredentials, данные автоматической аутентификации (токен обновления)
-    :param session: AsyncSession, объект сессии запроса
-    :return: APIUserModel, модель записи пользователя
+    Parameters
+    ----------
+    credentials : `HTTPAuthorizationCredentials`
+        Данные автоматической аутентификации (токен обновления)
+    session : `AsyncSession`
+        Объект сессии запроса
+
+    Returns
+    -------
+    user : `UserSchema`
+        Схема данных пользователя
     """
     global credentials_exception
 
@@ -74,15 +88,22 @@ async def validate_refresh_token(
 
 
 async def _get_user_from_token(token: AnyStr, session: AsyncSession) -> UserModel:
-    """
-    Функция получения записи пользователя из базы данных по data из JWT.
+    """Функция получения записи пользователя из базы данных по data из JWT.
 
     Получает на вход JSON Web Token, декодирует его и проверяет на наличие пользователя в базе данных.
     Возвращает модель записи пользователя из базы данных.
 
-    :param token: AnyStr, JSON Web Token
-    :param session: AsyncSession, объект сессии запроса
-    :return: DBUserModel, модель записи пользователя из базы данных
+    Parameters
+    ----------
+    token : `AnyStr`
+        JSON Web Token, токен доступа
+    session : `AsyncSession`
+        Объект сессии запроса
+
+    Returns
+    -------
+    user : `UserSchema`
+        Модель записи пользователя из базы данных
     """
     global credentials_exception
 

@@ -1,6 +1,6 @@
 from typing import List
 
-from games.blackjack import Hand
+from app.games.blackjack import Hand
 
 
 class Player:

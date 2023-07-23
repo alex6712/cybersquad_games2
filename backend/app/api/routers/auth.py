@@ -15,12 +15,12 @@ from passlib.context import CryptContext
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from api.dependencies import validate_refresh_token
-from api.jwt import create_jwt_pair
-from api.schemas import UserSchema, UserWithPasswordSchema
-from api.schemas.responses import StandardResponse, TokenResponse
-from api.services import user_service
-from database.session import get_session
+from app.api.dependencies import validate_refresh_token
+from app.api.jwt import create_jwt_pair
+from app.api.schemas import UserSchema, UserWithPasswordSchema
+from app.api.schemas.responses import StandardResponse, TokenResponse
+from app.api.services import user_service
+from app.database.session import get_session
 
 router = APIRouter(
     prefix="/auth",
@@ -35,15 +35,22 @@ async def sign_in(
         form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
         session: Annotated[AsyncSession, Depends(get_session)],
 ):
-    """
-    Метод аутентификации.
+    """Метод аутентификации.
 
     В теле запроса получает аутентификационные данные пользователя (username, password), проводит аутентификацию
     и возвращает JWT.
 
-    :param form_data: OAuth2PasswordRequestForm, аутентификационные данные пользователя
-    :param session: AsyncSession, объект сессии запроса
-    :return: APIJSONWebTokenModel, модель ответа с вложенной парой JWT
+    Parameters
+    ----------
+    form_data : `OAuth2PasswordRequestForm`
+        Аутентификационные данные пользователя
+    session : `AsyncSession`
+        Объект сессии запроса
+
+    Returns
+    -------
+    response : `TokenResponse`
+        Модель ответа сервера с вложенной парой JWT
     """
     user = await user_service.get_user_by_username(session, form_data.username)
 
@@ -70,14 +77,21 @@ async def sign_in(
 
 @router.post("/sign_up", status_code=status.HTTP_201_CREATED, response_model=StandardResponse)
 async def sign_up(user: UserWithPasswordSchema, session: Annotated[AsyncSession, Depends(get_session)]):
-    """
-    Метод регистрации.
+    """Метод регистрации.
 
     Получает на вход модель пользователя и добавляет запись в базу данных.
 
-    :param user: UserModel, модель объекта пользователя
-    :param session: AsyncSession, объект сессии запроса
-    :return: StandardResponse, положительная обратная связь о регистрации пользователя
+    Parameters
+    ----------
+    user : `UserWithPasswordSchema`
+        Схема объекта пользователя
+    session : `AsyncSession`
+        Объект сессии запроса
+
+    Returns
+    -------
+    response : `StandardResponse`
+        Положительная обратная связь о регистрации пользователя
     """
     if await user_service.get_user_by_username(session, user.username):
         await session.rollback()
@@ -109,29 +123,43 @@ async def refresh(
         user: Annotated[UserSchema, Depends(validate_refresh_token)],
         session: Annotated[AsyncSession, Depends(get_session)],
 ):
-    """
-    Метод повторной аутентификации через токен обновления.
+    """Метод повторной аутентификации через токен обновления.
 
     В заголовке получает refresh_token, проверяет на совпадение в базе данных по закодированной информации
     и перезаписывает токен обновления в базе данных.
 
-    :param user: APIUserModel, пользователь получен из зависимости на автоматическую аутентификацию
-    :param session: AsyncSession, объект сессии запроса
-    :return: APIJSONWebTokenModel, модель ответа с вложенной парой JWT
+    Parameters
+    ----------
+    user : `UserSchema`
+        Пользователь получен из зависимости на автоматическую аутентификацию
+    session : `AsyncSession`
+        Объект сессии запроса
+
+    Returns
+    -------
+    response : `TokenResponse`
+        Модель ответа сервера с вложенной парой JWT
     """
     return {**await _get_jwt_pair(user.username, session), "token_type": "bearer"}
 
 
 async def _get_jwt_pair(username: AnyStr, session: AsyncSession) -> Dict[AnyStr, AnyStr]:
-    """
-    Функция создания новой пары JWT.
+    """Функция создания новой пары JWT.
 
     Создаёт пару access_token и refresh_token, перезаписывает токен обновления пользователя
     в базе данных и возвращает пару JWT.
 
-    :param username: AnyStr, имя пользователя
-    :param session: AsyncSession, объект сессии запроса
-    :return: Dict[AnyStr, AnyStr], пара JWT
+    Parameters
+    ----------
+    username : `AnyStr`
+        Имя пользователя
+    session : `AsyncSession`
+        Объект сессии запроса
+
+    Returns
+    -------
+    tokens : `TokenResponse`
+        Пара JWT в виде словаря с двумя ключами: access_token и refresh_token
     """
     tokens = create_jwt_pair({"sub": username})
 

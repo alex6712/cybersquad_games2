@@ -6,9 +6,9 @@ from fastapi import (
     status,
 )
 
-from api.dependencies import validate_access_token
-from api.schemas import UserSchema
-from api.schemas.responses import StandardResponse
+from app.api.dependencies import validate_access_token
+from app.api.schemas import UserSchema
+from app.api.schemas.responses import StandardResponse
 
 router = APIRouter(
     prefix="/blackjack",

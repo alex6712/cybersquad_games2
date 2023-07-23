@@ -1,23 +1,20 @@
 from pydantic import Field
 
-from api.schemas.responses import StandardResponse
+from .standard import StandardResponse
 
 
 class TokenResponse(StandardResponse):
-    """
-    Модель ответа с вложенным JWT.
+    """Модель ответа с вложенным JWT.
 
     Используется в качестве ответа от сервера на запрос об авторизации.
 
-    .. seealso::
-
-        :ref:`BaseModel` - базовая модель pydantic :class:`pydantic.BaseModel`.
-
     Attributes
     ----------
-    access_token: str
-        JSON Web Token
-    token_type: str
+    access_token : `str`
+        JSON Web Token, токен доступа
+    refresh_token : `str`
+        JSON Web Token, токен обновления
+    token_type : `str`
         тип возвращаемого токена
     """
     access_token: str = Field(example="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"

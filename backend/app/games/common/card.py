@@ -10,10 +10,9 @@ from typing import (
 
 
 class _CommonEnumMeta(EnumMeta):
-    """
-    Мета класс базового Enum.
+    """Мета класс базового ``Enum``.
 
-    Нужен для того, чтобы установить соответствия между экземплярами Enum и любым из
+    Нужен для того, чтобы установить соответствия между экземплярами ``Enum`` и любым из
     значений итерируемого объекта, а не с единственным.
     """
 
@@ -32,13 +31,19 @@ class _CommonEnumMeta(EnumMeta):
                 cls._value2member_map_.setdefault(alias, member)
 
     def __call__(cls, value, **kwargs):
-        """
-        Возвращает соответствующий экземпляр с любым из перечисленных значений.
+        """Возвращает соответствующий экземпляр с любым из перечисленных значений.
+
         Если значения содержат текстовые типы, они будут искаться без учета регистра.
 
-        :param value: Any, значение Enum
-        :param **kwargs: dict, ignored
-        :return Any, экземпляр по значению
+        Parameters
+        ----------
+        value : `Any`
+            Значение ``Enum``
+
+        Returns
+        -------
+        enum : `Any`
+            Экземпляр по значению
         """
         if isinstance(value, str):
             value = value.upper()
@@ -47,8 +52,7 @@ class _CommonEnumMeta(EnumMeta):
 
 
 class CommonEnum(Enum, metaclass=_CommonEnumMeta):
-    """
-    Обобщённый базовый класс Enum.
+    """Обобщённый базовый класс Enum.
     """
 
     def __str__(self):
@@ -56,26 +60,29 @@ class CommonEnum(Enum, metaclass=_CommonEnumMeta):
 
     @classmethod
     def get_all(cls) -> List[Any]:
-        """
-        Возвращает список всех представлений Enum.
+        """Возвращает список всех представлений Enum.
 
-        :return: List[Any], список всех представлений
+        Returns
+        -------
+        aliases : `List[Any]`
+            Список всех представлений
         """
         return list(cls)
 
     @classmethod
     def make_random(cls) -> Any:
-        """
-        Возвращает случайное представление Enum.
+        """Возвращает случайное представление Enum.
 
-        :return: Any, случайное представление
+        Returns
+        -------
+        alias : `Any`
+            Случайное представление
         """
         return random.choice(cls.get_all())
 
 
 class Suit(CommonEnum):
-    """
-    Enum класс с мастями карт.
+    """Enum класс с мастями карт.
 
     Поддерживает сравнение мастей. Масти записаны в порядке возрастания.
     """
@@ -86,8 +93,7 @@ class Suit(CommonEnum):
 
 
 class Rank(CommonEnum):
-    """
-    Enum класс с достоинствами карт.
+    """Enum класс с достоинствами карт.
 
     Поддерживает сравнение достоинств. Достоинства записаны в порядке возрастания.
     """
@@ -107,12 +113,19 @@ class Rank(CommonEnum):
 
     @classmethod
     def difference(cls, first, second) -> int:
-        """
-        Возвращает целочисленную разницу между достоинством карт.
+        """Возвращает целочисленную разницу между достоинством карт.
 
-        :param first: Rank-like, достоинство первой карты
-        :param second: Rank-like, достоинство второй карты
-        :return: int, разница между достоинствами карт
+        Parameters
+        ----------
+        first : :obj:`Rank`
+            Достоинство первой карты
+        second : :obj:`Rank`
+            Достоинство второй карты
+
+        Returns
+        -------
+        difference : `int`
+            Разница между достоинствами карт
         """
         first, second = cls(first), cls(second)
         rank_list = list(cls)
@@ -120,21 +133,28 @@ class Rank(CommonEnum):
 
 
 class _CardMeta(type):
-    """
-    Мета класс инициализации класса игральных карт.
+    """Мета класс инициализации класса игральных карт.
 
     Используется по большей части для кеширования всех возможных карт в атрибут _all_cards.
     """
 
     def __new__(metacls, class_name, bases, class_dict):
-        """
-        Кешируем все возможные комбинации достоинства и масти (= все возможные игральные карты) и
+        """Кешируем все возможные комбинации достоинства и масти (= все возможные игральные карты) и
         сохраняем в атрибут класса _all_cards.
 
-        :param class_name: AnyStr, идентификатор класса
-        :param bases: Iterable[object], базовые классы иерархии
-        :param class_dict: dict[Any, Any], __dict__ класса
-        :return Any, объект класса, создаваемого с помощью этого мета класса
+        Parameters
+        ----------
+        class_name : `AnyStr`
+            Идентификатор класса
+        bases : `tuple[type, ...]`
+            Базовые классы иерархии
+        class_dict : `dict[Any, Any]`
+            __dict__ класса
+
+        Returns
+        -------
+        class : `Any`
+            Класс, создаваемый с помощью этого мета класса
         """
         cls = super(_CardMeta, metacls).__new__(metacls, class_name, bases, class_dict)
         cls._all_cards = list(
@@ -147,8 +167,7 @@ class _CardMeta(type):
 
 
 class Card(metaclass=_CardMeta):
-    """
-    Общий (распространённый) класс игральной карты.
+    """Общий (распространённый) класс игральной карты.
 
     Содержит в себе информацию о достоинстве и масти карты.
 
@@ -189,10 +208,12 @@ class Card(metaclass=_CardMeta):
 
     @classmethod
     def make_random(cls) -> "Card":
-        """
-        Возвращает случайную карту.
+        """Возвращает случайную карту.
 
-        :return: Card, случайная карта
+        Returns
+        -------
+        card : `Card`
+            Случайная карта
         """
         new = object.__new__(cls)
         new.rank = Rank.make_random()

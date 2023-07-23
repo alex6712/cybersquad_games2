@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app import get_settings
-from api.routers import (
+from app.api.routers import (
     auth_router,
     games_router,
     root_router,

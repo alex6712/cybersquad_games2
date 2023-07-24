@@ -12,15 +12,15 @@ async def get_user_by_username(session: AsyncSession, username: AnyStr) -> UserM
 
     Parameters
     ----------
-    session : `AsyncSession`
-        Объект сессии запроса
-    username : `AnyStr`
-        Логин пользователя, уникальное имя
+    session : AsyncSession
+        Объект сессии запроса.
+    username : AnyStr
+        Логин пользователя, уникальное имя.
 
     Returns
     -------
-    user : `UserModel`
-        Модель записи пользователя в базе данных
+    user : UserModel
+        Модель записи пользователя в базе данных.
     """
     return await session.scalar(select(UserModel).where(UserModel.username == username))
 
@@ -36,12 +36,12 @@ async def update_refresh_token(session: AsyncSession, username: AnyStr, refresh_
 
     Parameters
     ----------
-    session : `AsyncSession`
-        Объект сессии запроса
-    username : `AnyStr`
-        Логин пользователя, уникальное имя
-    refresh_token : `AnyStr`
-        Новый токен обновления
+    session : AsyncSession
+        Объект сессии запроса.
+    username : AnyStr
+        Логин пользователя, уникальное имя.
+    refresh_token : AnyStr
+        Новый токен обновления.
     """
     (await get_user_by_username(session, username)).refresh_token = refresh_token
 
@@ -51,9 +51,9 @@ def add_user(session: AsyncSession, user: UserWithPasswordSchema):
 
     Parameters
     ----------
-    session : `AsyncSession`
-        Объект сессии запроса
-    user : `UserWithPasswordSchema`
-        Модель объекта пользователя с паролем
+    session : AsyncSession
+        Объект сессии запроса.
+    user : UserWithPasswordSchema
+        Схема объекта пользователя с паролем.
     """
     session.add(UserModel(username=user.username, password=user.password, email=user.email, phone=user.phone))

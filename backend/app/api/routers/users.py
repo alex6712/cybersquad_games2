@@ -4,6 +4,7 @@ from fastapi import (
     APIRouter,
     Depends,
     status,
+    Path,
 )
 from fastapi.responses import RedirectResponse
 from fastapi.exceptions import HTTPException
@@ -22,7 +23,7 @@ router = APIRouter(
 )
 
 
-@router.get("/me", status_code=status.HTTP_200_OK, response_model=UserResponse)
+@router.get("/me", response_model=UserResponse, status_code=status.HTTP_200_OK, summary="Личная страница.")
 async def me(user: Annotated[UserSchema, Depends(validate_access_token)]):
     """Метод личной страницы пользователя.
 
@@ -30,20 +31,25 @@ async def me(user: Annotated[UserSchema, Depends(validate_access_token)]):
 
     Parameters
     ----------
-    user : `UserSchema`
-        Пользователь получен из зависимости на авторизацию
+    user : UserSchema
+        Пользователь получен из зависимости на авторизацию.
 
     Returns
     -------
-    user : `UserSchema`
-        Схема пользователя без пароля
+    user : UserSchema
+        Схема пользователя без пароля.
     """
     return user
 
 
-@router.get("/{username}", response_model=UserResponse)
+@router.get(
+    "/{username}",
+    response_model=UserResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Страница пользователя с именем \"username\".",
+)
 async def person(
-        username: AnyStr,
+        username: Annotated[AnyStr, Path(title="Логин пользователя, на чью личную страницу необходимо перейти.")],
         user: Annotated[UserSchema, Depends(validate_access_token)],
         session: Annotated[AsyncSession, Depends(get_session)],
 ):
@@ -54,17 +60,17 @@ async def person(
 
     Parameters
     ----------
-    username : `AnyStr`
-        Имя пользователя, чья страница запрашивается
-    user : `UserSchema`
-        Пользователь получен из зависимости на авторизацию
-    session : `AsyncSession`
-        Объект сессии запроса
+    username : AnyStr
+        Имя пользователя, чья страница запрашивается.
+    user : UserSchema
+        Пользователь получен из зависимости на авторизацию.
+    session : AsyncSession
+        Объект сессии запроса.
 
     Returns
     -------
-    user : `UserSchema`
-        Схема пользователя без пароля
+    user : UserSchema
+        Схема пользователя без пароля.
     """
     if user.username == username:
         return RedirectResponse("/users/me")
@@ -81,9 +87,8 @@ async def person(
         await session.rollback()
 
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Could not validate credentials.",
-            headers={"WWW-Authenticate": "Bearer"},
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Not enough information in request.",
         )
 
     return result

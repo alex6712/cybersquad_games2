@@ -9,14 +9,15 @@ from fastapi import (
     Depends,
     status,
     HTTPException,
+    Body,
 )
 from fastapi.security import OAuth2PasswordRequestForm
-from passlib.context import CryptContext
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.dependencies import validate_refresh_token
 from app.api.jwt import create_jwt_pair
+from app.api.security import hash_, verify
 from app.api.schemas import UserSchema, UserWithPasswordSchema
 from app.api.schemas.responses import StandardResponse, TokenResponse
 from app.api.services import user_service
@@ -27,10 +28,13 @@ router = APIRouter(
     tags=["authorization"],
 )
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-
-@router.post("/sign_in", status_code=status.HTTP_200_OK, response_model=TokenResponse)
+@router.post(
+    "/sign_in",
+    response_model=TokenResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Аутентификация.",
+)
 async def sign_in(
         form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
         session: Annotated[AsyncSession, Depends(get_session)],
@@ -42,15 +46,15 @@ async def sign_in(
 
     Parameters
     ----------
-    form_data : `OAuth2PasswordRequestForm`
-        Аутентификационные данные пользователя
-    session : `AsyncSession`
-        Объект сессии запроса
+    form_data : OAuth2PasswordRequestForm
+        Аутентификационные данные пользователя.
+    session : AsyncSession
+        Объект сессии запроса.
 
     Returns
     -------
-    response : `TokenResponse`
-        Модель ответа сервера с вложенной парой JWT
+    response : TokenResponse
+        Модель ответа сервера с вложенной парой JWT.
     """
     user = await user_service.get_user_by_username(session, form_data.username)
 
@@ -63,7 +67,7 @@ async def sign_in(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    if not pwd_context.verify(form_data.password, user.password):
+    if not verify(form_data.password, user.password):
         await session.rollback()
 
         raise HTTPException(
@@ -75,23 +79,31 @@ async def sign_in(
     return {**await _get_jwt_pair(user.username, session), "token_type": "bearer"}
 
 
-@router.post("/sign_up", status_code=status.HTTP_201_CREATED, response_model=StandardResponse)
-async def sign_up(user: UserWithPasswordSchema, session: Annotated[AsyncSession, Depends(get_session)]):
+@router.post(
+    "/sign_up",
+    response_model=StandardResponse,
+    status_code=status.HTTP_201_CREATED,
+    summary="Регистрация.",
+)
+async def sign_up(
+        user: Annotated[UserWithPasswordSchema, Body(title="Данные для регистрации пользователя.")],
+        session: Annotated[AsyncSession, Depends(get_session)]
+):
     """Метод регистрации.
 
     Получает на вход модель пользователя и добавляет запись в базу данных.
 
     Parameters
     ----------
-    user : `UserWithPasswordSchema`
-        Схема объекта пользователя
-    session : `AsyncSession`
-        Объект сессии запроса
+    user : UserWithPasswordSchema
+        Схема объекта пользователя.
+    session : AsyncSession
+        Объект сессии запроса.
 
     Returns
     -------
-    response : `StandardResponse`
-        Положительная обратная связь о регистрации пользователя
+    response : StandardResponse
+        Положительная обратная связь о регистрации пользователя.
     """
     if await user_service.get_user_by_username(session, user.username):
         await session.rollback()
@@ -101,7 +113,7 @@ async def sign_up(user: UserWithPasswordSchema, session: Annotated[AsyncSession,
             detail="User already exists.",
         )
 
-    user.password = pwd_context.hash(user.password)
+    user.password = hash_(user.password)
 
     user_service.add_user(session, user)
 
@@ -118,7 +130,12 @@ async def sign_up(user: UserWithPasswordSchema, session: Annotated[AsyncSession,
     return {"code": status.HTTP_201_CREATED, "message": f"User created successfully."}
 
 
-@router.get("/refresh", status_code=status.HTTP_200_OK, response_model=TokenResponse)
+@router.get(
+    "/refresh",
+    response_model=TokenResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Обновление токена доступа.",
+)
 async def refresh(
         user: Annotated[UserSchema, Depends(validate_refresh_token)],
         session: Annotated[AsyncSession, Depends(get_session)],
@@ -130,15 +147,15 @@ async def refresh(
 
     Parameters
     ----------
-    user : `UserSchema`
-        Пользователь получен из зависимости на автоматическую аутентификацию
-    session : `AsyncSession`
-        Объект сессии запроса
+    user : UserSchema
+        Пользователь получен из зависимости на автоматическую аутентификацию.
+    session : AsyncSession
+        Объект сессии запроса.
 
     Returns
     -------
-    response : `TokenResponse`
-        Модель ответа сервера с вложенной парой JWT
+    response : TokenResponse
+        Модель ответа сервера с вложенной парой JWT.
     """
     return {**await _get_jwt_pair(user.username, session), "token_type": "bearer"}
 
@@ -151,15 +168,20 @@ async def _get_jwt_pair(username: AnyStr, session: AsyncSession) -> Dict[AnyStr,
 
     Parameters
     ----------
-    username : `AnyStr`
-        Имя пользователя
-    session : `AsyncSession`
-        Объект сессии запроса
+    username : AnyStr
+        Имя пользователя.
+    session : AsyncSession
+        Объект сессии запроса.
 
     Returns
     -------
-    tokens : `TokenResponse`
-        Пара JWT в виде словаря с двумя ключами: access_token и refresh_token
+    tokens : Dict[AnyStr, AnyStr]
+        Пара JWT в виде словаря с двумя ключами: access_token и refresh_token.
+
+        ``access_token``:
+            Токен доступа (``str``).
+        ``refresh_token``:
+            Токен обновления (``str``).
     """
     tokens = create_jwt_pair({"sub": username})
 

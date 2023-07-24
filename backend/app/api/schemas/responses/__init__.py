@@ -20,9 +20,8 @@ JSON-like объекты (например, словари ``dict``) к опис
     в которую будет автоматически добавлено описание схемы.
 """
 
-__author__ = "Алексей Ванюков"
-
 from .standard import StandardResponse
 from .info import AppInfoResponse
 from .jwt import TokenResponse
 from .user import UserResponse
+from .rooms import RoomsResponse

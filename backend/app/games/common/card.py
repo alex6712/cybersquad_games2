@@ -37,13 +37,13 @@ class _CommonEnumMeta(EnumMeta):
 
         Parameters
         ----------
-        value : `Any`
-            Значение ``Enum``
+        value : Any
+            Значение ``Enum``.
 
         Returns
         -------
-        enum : `Any`
-            Экземпляр по значению
+        enum : Any
+            Экземпляр по значению.
         """
         if isinstance(value, str):
             value = value.upper()
@@ -64,8 +64,8 @@ class CommonEnum(Enum, metaclass=_CommonEnumMeta):
 
         Returns
         -------
-        aliases : `List[Any]`
-            Список всех представлений
+        aliases : List[Any]
+            Список всех представлений.
         """
         return list(cls)
 
@@ -75,8 +75,8 @@ class CommonEnum(Enum, metaclass=_CommonEnumMeta):
 
         Returns
         -------
-        alias : `Any`
-            Случайное представление
+        alias : Any
+            Случайное представление.
         """
         return random.choice(cls.get_all())
 
@@ -117,15 +117,15 @@ class Rank(CommonEnum):
 
         Parameters
         ----------
-        first : :obj:`Rank`
-            Достоинство первой карты
-        second : :obj:`Rank`
-            Достоинство второй карты
+        first : Rank
+            Достоинство первой карты.
+        second : Rank
+            Достоинство второй карты.
 
         Returns
         -------
-        difference : `int`
-            Разница между достоинствами карт
+        difference : int
+            Разница между достоинствами карт.
         """
         first, second = cls(first), cls(second)
         rank_list = list(cls)
@@ -144,17 +144,17 @@ class _CardMeta(type):
 
         Parameters
         ----------
-        class_name : `AnyStr`
-            Идентификатор класса
-        bases : `tuple[type, ...]`
-            Базовые классы иерархии
-        class_dict : `dict[Any, Any]`
-            __dict__ класса
+        class_name : AnyStr
+            Идентификатор класса.
+        bases : tuple[type, ...]
+            Базовые классы иерархии.
+        class_dict : dict[Any, Any]
+            __dict__ класса.
 
         Returns
         -------
-        class : `Any`
-            Класс, создаваемый с помощью этого мета класса
+        class : Any
+            Класс, создаваемый с помощью этого мета класса.
         """
         cls = super(_CardMeta, metacls).__new__(metacls, class_name, bases, class_dict)
         cls._all_cards = list(
@@ -174,9 +174,9 @@ class Card(metaclass=_CardMeta):
     Attributes
     ----------
     rank: Rank
-        достоинство карты
+        Достоинство карты.
     suit: Suit
-        масть карты
+        Масть карты.
     """
 
     def __init__(self, card: Iterable | AnyStr):
@@ -212,8 +212,8 @@ class Card(metaclass=_CardMeta):
 
         Returns
         -------
-        card : `Card`
-            Случайная карта
+        card : Card
+            Случайная карта.
         """
         new = object.__new__(cls)
         new.rank = Rank.make_random()

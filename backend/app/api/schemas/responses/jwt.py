@@ -10,12 +10,12 @@ class TokenResponse(StandardResponse):
 
     Attributes
     ----------
-    access_token : `str`
-        JSON Web Token, токен доступа
-    refresh_token : `str`
-        JSON Web Token, токен обновления
-    token_type : `str`
-        тип возвращаемого токена
+    access_token : str
+        JSON Web Token, токен доступа.
+    refresh_token : str
+        JSON Web Token, токен обновления.
+    token_type : str
+        тип возвращаемого токена.
     """
     access_token: str = Field(example="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
                                       ".eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ"

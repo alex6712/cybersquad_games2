@@ -11,8 +11,8 @@ class Hand:
 
     Attributes
     ----------
-    cards : `List[Card]`
-        Список всех карт в руке
+    cards : List[Card]
+        Список всех карт в руке.
     """
     def __init__(self, *cards: Card):
         self.cards: List[Card] = list()
@@ -36,8 +36,8 @@ class Hand:
 
         Parameters
         ----------
-        card : `Card`
-            Добавленная карта
+        card : Card
+            Добавленная карта.
         """
         self._ranks[card.rank] += 1
         self._suits[card.suit] += 1
@@ -47,8 +47,8 @@ class Hand:
 
         Parameters
         ----------
-        card : `Card`
-            Добавляемая карта
+        card : Card
+            Добавляемая карта.
         """
         self.cards.append(card)
         self._update(card)
@@ -63,7 +63,7 @@ class Hand:
         Parameters
         ----------
         cards
-            Произвольное количество карт
+            Произвольное количество карт.
         """
         for card in cards:
             self.append(card)
@@ -73,7 +73,7 @@ class Hand:
 
         Returns
         -------
-        ranks : `List[Rank]`
-            Список достоинств всех карт, образующих по крайней мере пару
+        ranks : List[Rank]
+            Список достоинств всех карт, образующих по крайней мере пару.
         """
         return [rank for rank, amount in self._ranks.items() if amount >= 2]

@@ -41,15 +41,15 @@ async def validate_access_token(
 
     Parameters
     ----------
-    token : `AnyStr`
-        JSON Web Token, токен доступа
-    session : `AsyncSession`
-        Объект сессии запроса
+    token : AnyStr
+        JSON Web Token, токен доступа.
+    session : AsyncSession
+        Объект сессии запроса.
 
     Returns
     -------
-    user : `UserSchema`
-        Схема данных пользователя
+    user : UserSchema
+        Схема данных пользователя.
     """
     user = await _get_user_from_token(token, session)
 
@@ -67,15 +67,15 @@ async def validate_refresh_token(
 
     Parameters
     ----------
-    credentials : `HTTPAuthorizationCredentials`
-        Данные автоматической аутентификации (токен обновления)
-    session : `AsyncSession`
-        Объект сессии запроса
+    credentials : HTTPAuthorizationCredentials
+        Данные автоматической аутентификации (токен обновления).
+    session : AsyncSession
+        Объект сессии запроса.
 
     Returns
     -------
-    user : `UserSchema`
-        Схема данных пользователя
+    user : UserSchema
+        Схема данных пользователя.
     """
     global credentials_exception
 
@@ -95,15 +95,15 @@ async def _get_user_from_token(token: AnyStr, session: AsyncSession) -> UserMode
 
     Parameters
     ----------
-    token : `AnyStr`
-        JSON Web Token, токен доступа
-    session : `AsyncSession`
-        Объект сессии запроса
+    token : AnyStr
+        JSON Web Token, токен доступа.
+    session : AsyncSession
+        Объект сессии запроса.
 
     Returns
     -------
-    user : `UserSchema`
-        Модель записи пользователя из базы данных
+    user : UserModel
+        Модель записи пользователя из базы данных.
     """
     global credentials_exception
 

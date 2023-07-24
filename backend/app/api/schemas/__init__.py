@@ -15,9 +15,12 @@
     https://docs.pydantic.dev/
 """
 
-__author__ = "Алексей Ванюков"
-
 from .user import (
     UserSchema,
     UserWithPasswordSchema,
+)
+from .room import (
+    RoomSchema,
+    RoomWithPasswordSchema,
+    RoomCredentialsSchema,
 )

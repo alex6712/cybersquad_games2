@@ -2,21 +2,18 @@ from pydantic import BaseModel, Field, EmailStr
 
 
 class UserSchema(BaseModel):
-    """
-    Модель объекта пользователя.
+    """Схема объекта пользователя.
 
     Используется в качестве представления информации о пользователе.
 
-    .. seealso::
-
-        :ref:`BaseModel` - базовая модель pydantic :class:`pydantic.BaseModel`.
-
     Attributes
     ----------
-    username: str
-        логин пользователя
-    email: EmailStr
-        адрес электронной почты пользователя
+    username : str
+        Логин пользователя.
+    email : EmailStr
+        Адрес электронной почты пользователя.
+    phone : str
+        Номер мобильного телефона пользователя.
     """
     username: str = Field(example="someone")
     email: EmailStr = Field(default=None, example="someone@post.domen")
@@ -24,14 +21,13 @@ class UserSchema(BaseModel):
 
 
 class UserWithPasswordSchema(UserSchema):
-    """
-    Модель объекта пользователя с паролем.
+    """Схема объекта пользователя с паролем.
 
     Используется в качестве представления информации о пользователе, включая пароль.
 
     Attributes
     ----------
-    password: str
-        пароль пользователя
+    password : str
+        Пароль пользователя.
     """
     password: str = Field(example="password")

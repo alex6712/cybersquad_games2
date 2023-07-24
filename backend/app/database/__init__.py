@@ -12,5 +12,3 @@
 .. _`здесь`:
     https://www.sqlalchemy.org
 """
-
-__author__ = "Алексей Ванюков"

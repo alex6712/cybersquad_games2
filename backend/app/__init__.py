@@ -3,19 +3,36 @@
 Source directory серверной части приложения.
 
 Используются инструменты:
-    FastAPI
-    SQLAlchemy
-    asyncio
-    uvicorn
-    asyncpg
+    * `FastAPI`_
+    * `SQLAlchemy`_
+    * `uvicorn`_
+    * `asyncpg`_
 
-Приложение создано командой CYBERSQUAD Games.
-Лицензия отсутствует.
-Приятной игры!
+Приложение создано командой CYBERSQUAD Games для игр на компанию по
+локальной сети.
+Приложение устанавливается на устройство, способное запустить Python,
+React и PostgreSQL, после чего запускается доступный по локальной сети
+frontend, а данное приложение, являющееся backend'ом, запускается
+на localhost, не позволяя подключиться к нему извне.
+
+.. _`FastAPI`:
+    https://fastapi.tiangolo.com/
+.. _`SQLAlchemy`:
+    https://www.sqlalchemy.org
+.. _`uvicorn`:
+    https://www.uvicorn.org
+.. _`asyncpg`:
+    https://magicstack.github.io/asyncpg/current/
 """
 
-__author__ = "Алексей Ванюков"
+from .config import get_settings
 
-from config import get_settings
+settings = get_settings()
 
-__version__ = get_settings().APP_VERSION
+__title__ = settings.APP_NAME
+__summary__ = settings.APP_SUMMARY
+
+__version__ = settings.APP_VERSION
+
+__author__ = settings.ADMIN_NAME
+__email__ = settings.ADMIN_EMAIL

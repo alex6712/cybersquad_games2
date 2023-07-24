@@ -22,8 +22,8 @@ async def get_session() -> AsyncSession:
 
     Returns
     -------
-    session : `AsyncSession`
-        Объект асинхронной сессии для уникального запроса
+    session : AsyncSession
+        Объект асинхронной сессии для уникального запроса.
     """
     async with AsyncSessionMaker() as session:
         yield session

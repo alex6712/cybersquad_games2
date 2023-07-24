@@ -16,10 +16,10 @@ class StandardResponse(BaseModel):
 
     Attributes
     ----------
-    code : `int`
-        Статусный код ответа от сервера
-    message : `str`
-        Сообщение от сервера
+    code : int
+        Статусный код ответа от сервера.
+    message : str
+        Сообщение от сервера.
     """
     code: int = Field(default=status.HTTP_200_OK, example=status.HTTP_200_OK)
     message: str = Field(default="Success!", example="Success!")

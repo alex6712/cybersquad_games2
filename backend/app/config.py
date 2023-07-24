@@ -27,46 +27,46 @@ class Settings(BaseSettings):
 
     Attributes
     ----------
-    APP_NAME : `str`
-        Наименование приложения
-    APP_VERSION : `str`
-        Текущая версия приложения
-    APP_DESCRIPTION : `str`
-        Полное описание приложения
-    APP_SUMMARY : `str`
-        Краткое описание приложения
-    ADMIN_NAME : `str`
-        ФИО ответственного
-    ADMIN_EMAIL : `EmailStr`
-        Адрес электронной почты для связи с ответственным
-    DEV_MODE : `bool`
-        Режим разработки
-    INITIALIZE_DB : `bool`
-        Пересоздать БД
-    BACKEND_CORS_ORIGINS : `List[AnyHttpUrl]`
-        Список источников для CORS Middleware
-    DOMAIN : `str` | `IPvAnyAddress`
-        IP домена, на котором расположено приложение
-    BACKEND_PORT : `int`
-        Порт приложения
-    DATABASE_USER : `str`
-        Пользователь базы данных для подключения
-    DATABASE_PASSWORD : `str`
-        Пароль пользователя для подключения к базе данных
-    DATABASE_PORT : `int`
-        Порт базы данных
-    DATABASE_NAME : `str`
-        Имя базы данных
-    DATABASE_URL : `PostgresDsn`
-        Строка подключения (ссылка) к базе данных
-    JWT_SECRET_KEY : `str`
-        Секретный ключ для кодирования JSON Web Token
-    JWT_ALGORITHM : `str`
-        Алгоритм кодирования JWT
-    ACCESS_TOKEN_LIFETIME_MINUTES : `int`
-        Срок жизни токена доступа в минутах
-    REFRESH_TOKEN_LIFETIME_DAYS : `int`
-        Срок жизни токена обновления в днях
+    APP_NAME : str
+        Наименование приложения.
+    APP_VERSION : str
+        Текущая версия приложения.
+    APP_DESCRIPTION : str
+        Полное описание приложения.
+    APP_SUMMARY : str
+        Краткое описание приложения.
+    ADMIN_NAME : str
+        ФИО ответственного.
+    ADMIN_EMAIL : EmailStr
+        Адрес электронной почты для связи с ответственным.
+    DEV_MODE : bool
+        Режим разработки.
+    INITIALIZE_DB : bool
+        Пересоздать БД.
+    BACKEND_CORS_ORIGINS : List[AnyHttpUrl]
+        Список источников для CORS Middleware.
+    DOMAIN : str` | `IPvAnyAddress
+        IP домена, на котором расположено приложение.
+    BACKEND_PORT : int
+        Порт приложения.
+    DATABASE_USER : str
+        Пользователь базы данных для подключения.
+    DATABASE_PASSWORD : str
+        Пароль пользователя для подключения к базе данных.
+    DATABASE_PORT : int
+        Порт базы данных.
+    DATABASE_NAME : str
+        Имя базы данных.
+    DATABASE_URL : PostgresDsn
+        Строка подключения (ссылка) к базе данных.
+    JWT_SECRET_KEY : str
+        Секретный ключ для кодирования JSON Web Token.
+    JWT_ALGORITHM : str
+        Алгоритм кодирования JWT.
+    ACCESS_TOKEN_LIFETIME_MINUTES : int
+        Срок жизни токена доступа в минутах.
+    REFRESH_TOKEN_LIFETIME_DAYS : int
+        Срок жизни токена обновления в днях.
     """
     APP_NAME: str
     APP_VERSION: str

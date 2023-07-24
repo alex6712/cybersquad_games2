@@ -13,8 +13,6 @@
 .. [1] Для единообразия кода и простоты чтения.
 """
 
-__author__ = "Алексей Ванюков"
-
 from .auth import router as auth_router
 from .games import router as games_router
 from .root import router as root_router

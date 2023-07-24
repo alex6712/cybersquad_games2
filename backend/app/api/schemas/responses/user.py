@@ -9,7 +9,7 @@ class UserResponse(StandardResponse, UserSchema):
 
     See also
     --------
-    responses.standard.StandardResponse
-    responses.user.UserSchema
+    schemas.responses.standard.StandardResponse
+    schemas.user.UserSchema
     """
     pass

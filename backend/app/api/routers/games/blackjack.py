@@ -16,6 +16,11 @@ router = APIRouter(
 )
 
 
-@router.get("/state", status_code=status.HTTP_200_OK, response_model=StandardResponse)
+@router.get(
+    "/state",
+    response_model=StandardResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Получение состояния игры для пользователя.",
+)
 def blackjack(user: Annotated[UserSchema, Depends(validate_access_token)]):
     return {"message": f"There's current game state for {user.username}."}

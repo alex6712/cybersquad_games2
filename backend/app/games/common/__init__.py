@@ -10,6 +10,4 @@ CYBERSQUAD Games common package
 в нескольких играх.
 """
 
-__author__ = "Алексей Ванюков"
-
 from .card import Suit, Rank, Card

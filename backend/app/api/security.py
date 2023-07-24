@@ -6,7 +6,7 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 def hash_(secret: str | bytes, scheme: str = None, category: str = None, **kwargs) -> str:
     """Прокси для метода ``CriptContext.hash()``.
 
-    Получает необходимые для выполнения метода параметры и возвращает результат.
+    Получает необходимые для выполнения хеширования параметры и возвращает результат.
 
     Parameters
     ----------
@@ -31,7 +31,9 @@ def hash_(secret: str | bytes, scheme: str = None, category: str = None, **kwarg
 
 
 def verify(secret: str | bytes, hashed: str | bytes, scheme: str = None, category: str = None, **kwargs) -> bool:
-    """Проверяет переданный пароль на соответствие переданному хешу.
+    """Прокси для метода ``CriptContext.verify()``.
+
+    Проверяет переданный пароль на соответствие переданному хешу.
 
     Parameters
     ----------

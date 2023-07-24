@@ -23,7 +23,6 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.dependencies import validate_access_token
-from app.api.security import hash_, verify
 from app.api.schemas import (
     UserSchema,
     RoomWithPasswordSchema,
@@ -33,6 +32,7 @@ from app.api.schemas.responses import (
     StandardResponse,
     RoomsResponse,
 )
+from app.api.security import hash_, verify
 from app.api.services import room_service
 from app.database.session import get_session
 from .blackjack import router as _blackjack_router
@@ -99,7 +99,11 @@ async def create_room(
     tags=["games"],
     summary="Удаляет комнату.",
 )
-async def delete_room(user: Annotated[UserSchema, Depends(validate_access_token)]):
+async def delete_room(
+        user: Annotated[UserSchema, Depends(validate_access_token)],  # noqa
+        room_id: Annotated[int, Query(title="Идентификатор комнаты, которую необходимо удалить.")],
+        session: Annotated[AsyncSession, Depends(get_session)],
+):
     """Метод удаления комнаты.
 
     Проверяет возможность удаления комнаты, выполняет удаление каскада зависимостей.
@@ -108,13 +112,19 @@ async def delete_room(user: Annotated[UserSchema, Depends(validate_access_token)
     ----------
     user : UserSchema
         Пользователь получен из зависимости на авторизацию.
+    room_id : int
+        Идентификатор комнаты, которую необходимо удалить.
+    session : AsyncSession
+        Объект сессии запроса.
 
     Returns
     -------
     response : StandardResponse
         Положительная обратная связь об удалении комнаты.
     """
-    return {"message": f"Room deleted by {user.username} successfully."}
+    await room_service.delete_room_by_id(session, room_id)
+
+    return {"message": f"Room deleted successfully."}
 
 
 @router.get(
@@ -122,10 +132,44 @@ async def delete_room(user: Annotated[UserSchema, Depends(validate_access_token)
     response_model=RoomsResponse,
     status_code=status.HTTP_200_OK,
     tags=["games"],
-    summary="Возвращает список комнат."
+    summary="Возвращает список доступных комнат."
 )
-async def get_room(query: Annotated[str | None, Query(title="параметры фильтрации выборки игровых комнат.")]):
-    return {"message": "Hello, World!", "rooms": []}
+async def get_room(
+        session: Annotated[AsyncSession, Depends(get_session)],
+        title: Annotated[str, Query(title="Параметр title фильтрации игровых комнат.")] = None,
+        game_type: Annotated[list[str], Query(title="Параметр game_type фильтрации игровых комнат.")] = None,
+):
+    """Метод получения списка доступных игр.
+
+    Метод также в query-параметрах получает информацию для фильтрации по имени и типу игры.
+
+    Parameters
+    ----------
+    session : AsyncSession
+        Объект сессии запроса.
+    title : str, optional
+        Название комнаты.
+    game_type : list[str], optional
+        Список строковых типов игр.
+
+    Returns
+    -------
+    response : RoomsResponse
+        Ответ сервера, содержащий список доступных игр.
+    """
+    rooms = [*await room_service.get_rooms_by_title_and_game_type(session, title, game_type)]
+
+    try:
+        await session.commit()
+    except IntegrityError:
+        await session.rollback()
+
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Incorrect request.",
+        )
+
+    return {"rooms": rooms}
 
 
 @router.post(

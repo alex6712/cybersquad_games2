@@ -124,6 +124,16 @@ async def delete_room(
     """
     await room_service.delete_room_by_id(session, room_id)
 
+    try:
+        await session.commit()
+    except IntegrityError:
+        await session.rollback()
+
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Incorrect request.",
+        )
+
     return {"message": f"Room deleted successfully."}
 
 

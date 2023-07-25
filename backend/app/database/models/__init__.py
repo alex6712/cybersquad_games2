@@ -1,4 +1,4 @@
-"""Database CYDERSQUAD Games Models
+"""Database CYBERSQUAD Games Models
 
 Пакет с описаниями моделей сущностей базы данных.
 
